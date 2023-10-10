@@ -8,7 +8,7 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
-public class TestStudadviceApplication {
+public class TestStudAdviceApplication {
 
 	@Bean
 	@ServiceConnection
@@ -17,7 +17,7 @@ public class TestStudadviceApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.from(StudadviceApplication::main).with(TestStudadviceApplication.class).run(args);
+		SpringApplication.from(StudAdviceApplication::main).with(TestStudAdviceApplication.class).run(args);
 	}
 
 }
