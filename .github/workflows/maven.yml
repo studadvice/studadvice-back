@@ -2,9 +2,9 @@ name: Studadvice maven CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   setup_and_compile:
