@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "3fb1dfe6-c5ce-4233-b8f0-ce91b082718a",
+		"name": "StudAdvice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "20722123"
+	},
+	"item": [
+		{
+			"name": "administrative-process",
+			"item": [
+				{
+					"name": "getAdministrativeProcessCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/administrative-process/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "getAdministrativeProcessSubCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/administrative-process/{category}/sub-categories"
+					},
+					"response": []
+				},
+				{
+					"name": "getAdministrativeProcessById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/administrative-process/{id}"
+					},
+					"response": []
+				},
+				{
+					"name": "createAdministrativeProcess",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{base-url}}/administrative-process"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateAdministrativeProcess",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{base-url}}/administrative-process/{id}"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteAdministrativePorcess",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base-url}}/administrative-process/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "deals",
+			"item": [
+				{
+					"name": "getDeals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/deals"
+					},
+					"response": []
+				},
+				{
+					"name": "createDeal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{base-url}}"
+					},
+					"response": []
+				},
+				{
+					"name": "updateDeal",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{base-url}}/{id}"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteDeal",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base-url}}/{id}"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": {
+			"password": "{{generated-password}}",
+			"username": "user"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "generated-password",
+			"value": "390c1a09-bf00-40f5-9606-0589f2449c22",
+			"type": "string"
+		},
+		{
+			"key": "base-url",
+			"value": "localhost:8080",
+			"type": "string"
+		}
+	]
+}
