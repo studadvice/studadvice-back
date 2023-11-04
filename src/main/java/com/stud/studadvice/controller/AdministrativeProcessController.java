@@ -30,7 +30,7 @@ public class AdministrativeProcessController {
      * @return A list of sub-categories for the specified category.
      */
     @Operation(summary = "Retrieve sub-categories for a specific category")
-    @GetMapping("/categories/{category}/sub-categories")
+    @GetMapping("/{category}/sub-categories")
     private List<String> getCategorySubCategories(@PathVariable String category){
         return null;
     }
