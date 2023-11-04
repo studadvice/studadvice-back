@@ -16,6 +16,7 @@ public class AdministrativeProcess {
     private List<Step> stepList;
     private List<Resource> resourceList;
     private List<RequiredDocument> requiredDocumentsList;
+    private Category category;
 
     public AdministrativeProcess() {
     }
@@ -58,5 +59,13 @@ public class AdministrativeProcess {
 
     public void setRequiredDocumentsList(List<RequiredDocument> requiredDocumentsList) {
         this.requiredDocumentsList = requiredDocumentsList;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

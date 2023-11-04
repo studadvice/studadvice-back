@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
-public class StudentDeals {
+public class Deals {
     @Field("_id")
     private ObjectId id;
     private String title;
@@ -15,7 +15,7 @@ public class StudentDeals {
     private String startDate;
     private String endDate;
 
-    public StudentDeals() {
+    public Deals() {
     }
 
     public ObjectId getId() {

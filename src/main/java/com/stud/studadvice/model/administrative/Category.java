@@ -1,10 +1,7 @@
 package com.stud.studadvice.model.administrative;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
 
-@Document
 public class Category {
     private String name;
     private String image;
