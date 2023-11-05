@@ -3,6 +3,7 @@ package com.stud.studadvice.service;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class AdministrativeProcessService {
         return administrativeProcessRepository.findByCategoryAndSubCategory(category, subCategory);
     }
 
-    public AdministrativeProcess getAdministrativeProcessById(String id) throws AdministrativeProcessException {
+    public AdministrativeProcess getAdministrativeProcessById(ObjectId id) throws AdministrativeProcessException {
         AdministrativeProcess process = administrativeProcessRepository.findById(id).orElse(null);
         if (process == null) {
             throw new AdministrativeProcessException("Administrative process not found");
@@ -37,7 +38,7 @@ public class AdministrativeProcessService {
         return administrativeProcessRepository.save(administrativeProcess);
     }
 
-    public AdministrativeProcess updateAdministrativeProcess(String id, AdministrativeProcess updatedProcess) throws AdministrativeProcessException {
+    public AdministrativeProcess updateAdministrativeProcess(ObjectId id, AdministrativeProcess updatedProcess) throws AdministrativeProcessException {
         AdministrativeProcess existingProcess = administrativeProcessRepository.findById(id).orElse(null);
         if (existingProcess == null) {
             throw new AdministrativeProcessException("Administrative process to update not found");
@@ -52,7 +53,7 @@ public class AdministrativeProcessService {
         return administrativeProcessRepository.save(existingProcess);
     }
 
-    public void deleteAdministrativeProcess(String id) throws AdministrativeProcessException {
+    public void deleteAdministrativeProcess(ObjectId id) throws AdministrativeProcessException {
         if (!administrativeProcessRepository.existsById(id)) {
             throw new AdministrativeProcessException("Administrative process to delete not found");
         }

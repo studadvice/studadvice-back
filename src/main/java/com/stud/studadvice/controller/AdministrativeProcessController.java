@@ -6,6 +6,7 @@ import com.stud.studadvice.service.AdministrativeProcessService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -67,12 +68,12 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
     @GetMapping("/{id}")
-    public AdministrativeProcess getAdministrativeProcessById(@PathVariable String id) {
+    public AdministrativeProcess getAdministrativeProcessById(@PathVariable ObjectId id) {
         try {
             return administrativeProcessService.getAdministrativeProcessById(id);
         }
         catch (AdministrativeProcessException administrativeProcessException){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 
@@ -106,12 +107,12 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
     @PutMapping("/{id}")
-    public AdministrativeProcess updateAdministrativeProcess(@PathVariable String id, @RequestBody AdministrativeProcess updatedProcess) {
+    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId id, @RequestBody AdministrativeProcess updatedProcess) {
         try {
             return administrativeProcessService.updateAdministrativeProcess(id,updatedProcess);
         }
         catch (AdministrativeProcessException administrativeProcessException){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 
@@ -126,12 +127,12 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
     @DeleteMapping("/{id}")
-    public void deleteAdministrativeProcess(@PathVariable String id) {
+    public void deleteAdministrativeProcess(@PathVariable ObjectId id) {
         try{
             administrativeProcessService.deleteAdministrativeProcess(id);
         }
         catch (AdministrativeProcessException administrativeProcessException){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 
