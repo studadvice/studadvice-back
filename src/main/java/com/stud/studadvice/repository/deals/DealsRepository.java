@@ -1,7 +1,10 @@
 package com.stud.studadvice.repository.deals;
 
-import com.stud.studadvice.model.deals.Deals;
+import com.stud.studadvice.model.deal.Deal;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface DealsRepository extends MongoRepository<Deals, String> {
+@Repository
+public interface DealsRepository extends MongoRepository<Deal, ObjectId> {
 }

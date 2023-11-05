@@ -1,10 +1,16 @@
 package com.stud.studadvice.controller;
 
-import com.stud.studadvice.model.deals.Deals;
+import com.stud.studadvice.exception.DealException;
+import com.stud.studadvice.model.deal.Deal;
+import com.stud.studadvice.service.DealsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -15,6 +21,9 @@ import java.util.List;
 @RequestMapping("/deals")
 public class DealsController {
 
+    @Autowired
+    private DealsService dealsService;
+
     /**
      * Retrieves a list of all student deals.
      *
@@ -22,8 +31,8 @@ public class DealsController {
      */
     @Operation(summary = "Retrieve a list of all student deals")
     @GetMapping
-    public List<Deals> getDeals() {
-        return null;
+    public List<Deal> getDeals() {
+        return dealsService.getAllDeals();
     }
 
     /**
@@ -38,8 +47,8 @@ public class DealsController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
     @PostMapping
-    public Deals createDeal(@RequestBody Deals newDeal) {
-        return null;
+    public Deal createDeal(@RequestBody Deal newDeal) {
+        return dealsService.createDeal(newDeal);
     }
 
     /**
@@ -55,8 +64,12 @@ public class DealsController {
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
     @PutMapping("/{id}")
-    public Deals updateDeal(@PathVariable String id, @RequestBody Deals updatedDeal) {
-        return null;
+    public Deal updateDeal(@PathVariable ObjectId id, @RequestBody Deal updatedDeal) {
+        try {
+            return dealsService.updateDeal(id, updatedDeal);
+        } catch (DealException dealException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
+        }
     }
 
     /**
@@ -70,6 +83,11 @@ public class DealsController {
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
     @DeleteMapping("/{id}")
-    public void deleteDeal(@PathVariable String id) {
+    public void deleteDeal(@PathVariable ObjectId id) {
+        try {
+            dealsService.deleteDeal(id);
+        } catch (DealException dealException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
+        }
     }
 }
