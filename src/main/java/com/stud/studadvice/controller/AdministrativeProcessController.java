@@ -1,16 +1,23 @@
 package com.stud.studadvice.controller;
 
+import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
+import com.stud.studadvice.service.AdministrativeProcessService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/administrative-process")
 public class AdministrativeProcessController {
+    @Autowired
+    private AdministrativeProcessService administrativeProcessService;
 
     /**
      * Retrieves all categories of administrative processes.
@@ -20,7 +27,7 @@ public class AdministrativeProcessController {
     @Operation(summary = "Retrieve all administrative process categories")
     @GetMapping("/categories")
     private List<String> getAdministrativeProcessCategories(){
-        return null;
+        return administrativeProcessService.getAdministrativeProcessCategories();
     }
 
     /**
@@ -32,7 +39,7 @@ public class AdministrativeProcessController {
     @Operation(summary = "Retrieve sub-categories for a specific category")
     @GetMapping("/{category}/sub-categories")
     private List<String> getCategorySubCategories(@PathVariable String category){
-        return null;
+        return administrativeProcessService.getCategorySubCategories(category);
     }
 
     /**
@@ -45,7 +52,7 @@ public class AdministrativeProcessController {
     @Operation(summary = "Retrieve administrative processes by category and sub-category")
     @GetMapping
     private List<AdministrativeProcess> getAdministrativeProcess(@RequestParam String category, @RequestParam String subCategory){
-        return null;
+        return administrativeProcessService.getAdministrativeProcess(category,subCategory);
     }
 
     /**
@@ -61,7 +68,12 @@ public class AdministrativeProcessController {
     })
     @GetMapping("/{id}")
     public AdministrativeProcess getAdministrativeProcessById(@PathVariable String id) {
-        return null;
+        try {
+            return administrativeProcessService.getAdministrativeProcessById(id);
+        }
+        catch (AdministrativeProcessException administrativeProcessException){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
+        }
     }
 
 
@@ -76,9 +88,9 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "201", description = "Administrative process created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
-    @PostMapping("/")
+    @PostMapping
     public AdministrativeProcess createAdministrativeProcess(@RequestBody AdministrativeProcess administrativeProcess) {
-        return null;
+        return administrativeProcessService.createAdministrativeProcess(administrativeProcess);
     }
 
     /**
@@ -95,7 +107,12 @@ public class AdministrativeProcessController {
     })
     @PutMapping("/{id}")
     public AdministrativeProcess updateAdministrativeProcess(@PathVariable String id, @RequestBody AdministrativeProcess updatedProcess) {
-        return null;
+        try {
+            return administrativeProcessService.updateAdministrativeProcess(id,updatedProcess);
+        }
+        catch (AdministrativeProcessException administrativeProcessException){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
+        }
     }
 
     /**
@@ -110,6 +127,12 @@ public class AdministrativeProcessController {
     })
     @DeleteMapping("/{id}")
     public void deleteAdministrativeProcess(@PathVariable String id) {
+        try{
+            administrativeProcessService.deleteAdministrativeProcess(id);
+        }
+        catch (AdministrativeProcessException administrativeProcessException){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
+        }
     }
 
 }
