@@ -2,6 +2,7 @@ package com.stud.studadvice.service;
 
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
+import com.stud.studadvice.repository.administrative.AdministrativeProcessCustomRepository;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +15,11 @@ public class AdministrativeProcessService {
     @Autowired
     private AdministrativeProcessRepository administrativeProcessRepository;
 
-    public List<String> getAdministrativeProcessCategories() {
-        return administrativeProcessRepository.findDistinctCategories();
-    }
-
-    public List<String> getCategorySubCategories(String category) {
-        return administrativeProcessRepository.findDistinctSubCategoriesByCategory(category);
-    }
+    @Autowired
+    private AdministrativeProcessCustomRepository administrativeProcessCustomRepository;
 
     public List<AdministrativeProcess> getAdministrativeProcess(String category, String subCategory) {
-        return administrativeProcessRepository.findByCategoryAndSubCategory(category, subCategory);
+        return administrativeProcessCustomRepository.findByCategoryAndSubCategory(category, subCategory);
     }
 
     public AdministrativeProcess getAdministrativeProcessById(ObjectId id) throws AdministrativeProcessException {
