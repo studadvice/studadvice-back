@@ -17,31 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/administrative-process")
 public class AdministrativeProcessController {
+
     @Autowired
     private AdministrativeProcessService administrativeProcessService;
 
-    /**
-     * Retrieves all categories of administrative processes.
-     *
-     * @return A list of administrative process categories.
-     */
-    @Operation(summary = "Retrieve all administrative process categories")
-    @GetMapping("/categories")
-    private List<String> getAdministrativeProcessCategories(){
-        return administrativeProcessService.getAdministrativeProcessCategories();
-    }
-
-    /**
-     * Retrieves sub-categories for a given category.
-     *
-     * @param category The category for which to retrieve sub-categories.
-     * @return A list of sub-categories for the specified category.
-     */
-    @Operation(summary = "Retrieve sub-categories for a specific category")
-    @GetMapping("/{category}/sub-categories")
-    private List<String> getCategorySubCategories(@PathVariable String category){
-        return administrativeProcessService.getCategorySubCategories(category);
-    }
 
     /**
      * Retrieves administrative processes by category and sub-category.
