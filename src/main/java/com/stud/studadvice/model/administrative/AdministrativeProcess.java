@@ -16,8 +16,8 @@ public class AdministrativeProcess {
     private List<Step> stepList;
     private List<Resource> resourceList;
     private List<RequiredDocument> requiredDocumentsList;
-    private Category category;
-    private SubCategory subCategory;
+    private String categoryName;
+    private String subCategoryName;
 
     public AdministrativeProcess() {
     }
@@ -62,19 +62,19 @@ public class AdministrativeProcess {
         this.requiredDocumentsList = requiredDocumentsList;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
-    public SubCategory getSubCategory() {
-        return subCategory;
+    public String getSubCategoryName() {
+        return subCategoryName;
     }
 
-    public void setSubCategory(SubCategory subCategory) {
-        this.subCategory = subCategory;
+    public void setSubCategoryName(String subCategoryName) {
+        this.subCategoryName = subCategoryName;
     }
 }

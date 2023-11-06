@@ -1,11 +1,13 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.AdministrativeProcessException;
+import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.service.AdministrativeProcessService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.annotation.Nullable;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,16 @@ public class AdministrativeProcessController {
 
 
     /**
+     * Retrieves all the administrative processes.
+     * @return A list of administrative processes.
+     */
+    @Operation(summary = "Retrieve all administrative processes")
+    @GetMapping("/all")
+    private List<AdministrativeProcess> getAdministrativeProcess(){
+        return administrativeProcessService.getAdministrativeProcess();
+    }
+
+    /**
      * Retrieves administrative processes by category and sub-category.
      *
      * @param category    The category of the administrative process.
@@ -31,7 +43,7 @@ public class AdministrativeProcessController {
      */
     @Operation(summary = "Retrieve administrative processes by category and sub-category")
     @GetMapping
-    private List<AdministrativeProcess> getAdministrativeProcess(@RequestParam String category, @RequestParam String subCategory){
+    private List<AdministrativeProcess> getAdministrativeProcess(@RequestParam @Nullable  String category, @Nullable @RequestParam String subCategory){
         return administrativeProcessService.getAdministrativeProcess(category,subCategory);
     }
 
@@ -70,7 +82,12 @@ public class AdministrativeProcessController {
     })
     @PostMapping
     public AdministrativeProcess createAdministrativeProcess(@RequestBody AdministrativeProcess administrativeProcess) {
-        return administrativeProcessService.createAdministrativeProcess(administrativeProcess);
+        try{
+            return administrativeProcessService.createAdministrativeProcess(administrativeProcess);
+        }
+        catch (CategoryException categoryException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
+        }
     }
 
     /**
@@ -92,6 +109,9 @@ public class AdministrativeProcessController {
         }
         catch (AdministrativeProcessException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
+        }
+        catch (CategoryException categoryException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
         }
     }
 
