@@ -1,11 +1,14 @@
 package com.stud.studadvice.model.deal;
 
 import org.bson.types.ObjectId;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 public class Deal {
+    @Id
     @Field("_id")
     private ObjectId id;
     private String title;
