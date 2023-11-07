@@ -16,7 +16,7 @@ public class AdministrativeProcess {
     private Informations informations;
     private List<Step> stepList;
     private List<Resource> resourceList;
-    private List<RequiredDocument> requiredDocumentsList;
+    private List<ObjectId> requiredDocumentsList;
 
     public AdministrativeProcess() {
     }
@@ -53,12 +53,11 @@ public class AdministrativeProcess {
         this.stepList = stepList;
     }
 
-    public List<RequiredDocument> getRequiredDocumentsList() {
+    public List<ObjectId> getRequiredDocumentsList() {
         return requiredDocumentsList;
     }
 
-    public void setRequiredDocumentsList(List<RequiredDocument> requiredDocumentsList) {
+    public void setRequiredDocumentsList(List<ObjectId> requiredDocumentsList) {
         this.requiredDocumentsList = requiredDocumentsList;
     }
-
 }

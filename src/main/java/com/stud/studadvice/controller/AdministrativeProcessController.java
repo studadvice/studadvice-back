@@ -9,8 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-import jakarta.annotation.Nullable;
-
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +30,9 @@ public class AdministrativeProcessController {
      * @return A list of administrative processes.
      */
     @Operation(summary = "Retrieve all administrative processes")
-    @GetMapping("/all")
+    @GetMapping
     private List<AdministrativeProcess> getAdministrativeProcess(){
         return administrativeProcessService.getAdministrativeProcess();
-    }
-
-    /**
-     * Retrieves administrative processes by category and sub-category.
-     *
-     * @param category    The category of the administrative process.
-     * @param subCategory The sub-category of the administrative process.
-     * @return A list of administrative processes based on the category and sub-category.
-     */
-    @Operation(summary = "Retrieve administrative processes by category and sub-category")
-    @GetMapping
-    private List<AdministrativeProcess> getAdministrativeProcess(@RequestParam @Nullable  String category, @Nullable @RequestParam String subCategory){
-        return administrativeProcessService.getAdministrativeProcess(category,subCategory);
     }
 
     /**
@@ -111,9 +96,6 @@ public class AdministrativeProcessController {
         }
         catch (AdministrativeProcessException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
-        }
-        catch (CategoryException categoryException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
         }
     }
 
