@@ -4,11 +4,15 @@ import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.service.AdministrativeProcessService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import jakarta.annotation.Nullable;
+
 import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +26,6 @@ public class AdministrativeProcessController {
 
     @Autowired
     private AdministrativeProcessService administrativeProcessService;
-
 
     /**
      * Retrieves all the administrative processes.
@@ -67,7 +70,6 @@ public class AdministrativeProcessController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
-
 
     /**
      * Creates a new administrative process.

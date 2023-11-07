@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
+
     @Autowired
     private CategoryService categoryService;
 
@@ -101,7 +102,6 @@ public class CategoryController {
         return categoryService.getSubcategoriesOfCategory(name);
     }
 
-
     @Operation(summary = "Create a subcategory for a category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Subcategory created successfully", content = @Content(schema = @Schema(implementation = SubCategory.class))),
@@ -115,8 +115,7 @@ public class CategoryController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
         }
     }
-
-
+    
     @Operation(summary = "Update a subcategory by name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Subcategory updated successfully", content = @Content(schema = @Schema(implementation = SubCategory.class))),
