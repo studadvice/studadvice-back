@@ -1,18 +1,19 @@
 package com.stud.studadvice.model.administrative;
 
 public class Informations {
-    private String title;
+    private String name;
     private String description;
+    private String image;
 
     public Informations() {
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -21,5 +22,13 @@ public class Informations {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

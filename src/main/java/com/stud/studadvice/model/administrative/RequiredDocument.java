@@ -1,17 +1,25 @@
 package com.stud.studadvice.model.administrative;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@Document
 public class RequiredDocument {
-    private Long id;
+    @Field("_id")
+    @Id
+    private ObjectId id;
     private Informations informations;
 
     public RequiredDocument() {
     }
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

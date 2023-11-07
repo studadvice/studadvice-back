@@ -1,25 +1,27 @@
 package com.stud.studadvice.model.administrative;
 
+import java.util.List;
+
 public class SubCategory {
-    private String name;
-    private String image;
+    private Informations informations;
+    private List<AdministrativeProcess> administrativeProcessList;
 
     public SubCategory() {
     }
 
-    public String getName() {
-        return name;
+    public Informations getInformations() {
+        return informations;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setInformations(Informations informations) {
+        this.informations = informations;
     }
 
-    public String getImage() {
-        return image;
+    public List<AdministrativeProcess> getAdministrativeProcessList() {
+        return administrativeProcessList;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setAdministrativeProcessList(List<AdministrativeProcess> administrativeProcessList) {
+        this.administrativeProcessList = administrativeProcessList;
     }
 }

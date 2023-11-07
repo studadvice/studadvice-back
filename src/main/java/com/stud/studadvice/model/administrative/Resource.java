@@ -3,6 +3,7 @@ package com.stud.studadvice.model.administrative;
 public class Resource {
     private String name;
     private String url;
+    private String image;
 
     public Resource() {
     }
@@ -21,5 +22,13 @@ public class Resource {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

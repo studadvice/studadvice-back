@@ -1,6 +1,7 @@
 package com.stud.studadvice.model.administrative;
 
 import org.bson.types.ObjectId;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -11,23 +12,21 @@ import java.util.List;
 public class AdministrativeProcess {
     @Field("_id")
     @Id
-    private ObjectId _id;
+    private ObjectId id;
     private Informations informations;
     private List<Step> stepList;
     private List<Resource> resourceList;
     private List<RequiredDocument> requiredDocumentsList;
-    private String categoryName;
-    private String subCategoryName;
 
     public AdministrativeProcess() {
     }
 
-    public ObjectId get_id() {
-        return _id;
+    public ObjectId getId() {
+        return id;
     }
 
-    public void set_id(ObjectId _id) {
-        this._id = _id;
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public Informations getInformations() {
@@ -62,19 +61,4 @@ public class AdministrativeProcess {
         this.requiredDocumentsList = requiredDocumentsList;
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getSubCategoryName() {
-        return subCategoryName;
-    }
-
-    public void setSubCategoryName(String subCategoryName) {
-        this.subCategoryName = subCategoryName;
-    }
 }
