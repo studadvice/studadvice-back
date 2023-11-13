@@ -1,7 +1,6 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.AdministrativeProcessException;
-import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.service.AdministrativeProcessService;
 
@@ -69,11 +68,11 @@ public class AdministrativeProcessController {
     })
     @PostMapping
     public AdministrativeProcess createAdministrativeProcess(@RequestBody AdministrativeProcess administrativeProcess) {
-        try{
+        try {
             return administrativeProcessService.createAdministrativeProcess(administrativeProcess);
         }
-        catch (CategoryException categoryException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
+        catch (AdministrativeProcessException administrativeProcessException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 

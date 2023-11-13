@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/required-document")
 public class RequiredDocumentController {
 
     @Autowired

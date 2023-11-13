@@ -33,9 +33,9 @@ public class RequiredDocumentService {
         RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
                 .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
 
-        requiredDocument.setInformations(requiredDocument.getInformations());
+        requiredDocument.setInformations(requiredDocumentUpdated.getInformations());
 
-        return requiredDocumentRepository.save(requiredDocumentUpdated);
+        return requiredDocumentRepository.save(requiredDocument);
     }
 
     public void deleteRequiredDocument(ObjectId id) throws RequiredDocumentException {
