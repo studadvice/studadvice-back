@@ -3,7 +3,10 @@ package com.stud.studadvice.model.administrative;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.List;
 
 @Document
 public class RequiredDocument {
@@ -11,7 +14,8 @@ public class RequiredDocument {
     @Id
     private ObjectId id;
     private Informations informations;
-
+    @DocumentReference(lazy = true)
+    private List<Step> stepList;
     public RequiredDocument() {
     }
 
@@ -29,5 +33,13 @@ public class RequiredDocument {
 
     public void setInformations(Informations informations) {
         this.informations = informations;
+    }
+
+    public List<Step> getStepList() {
+        return stepList;
+    }
+
+    public void setStepList(List<Step> stepList) {
+        this.stepList = stepList;
     }
 }

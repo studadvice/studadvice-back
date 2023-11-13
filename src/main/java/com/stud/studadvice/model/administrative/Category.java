@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
@@ -14,17 +15,9 @@ public class Category {
     @Id
     private ObjectId id;
     private Informations informations;
-    private List<SubCategory> subCategoryList;
-
+    @DocumentReference
+    private List<AdministrativeProcess> administrativeProcesses;
     public Category() {
-    }
-
-    public List<SubCategory> getSubCategoryList() {
-        return subCategoryList;
-    }
-
-    public void setSubCategoryList(List<SubCategory> subCategoryList) {
-        this.subCategoryList = subCategoryList;
     }
 
     public ObjectId getId() {
@@ -42,4 +35,13 @@ public class Category {
     public void setInformations(Informations informations) {
         this.informations = informations;
     }
+
+    public List<AdministrativeProcess> getAdministrativeProcesses() {
+        return administrativeProcesses;
+    }
+
+    public void setAdministrativeProcesses(List<AdministrativeProcess> administrativeProcesses) {
+        this.administrativeProcesses = administrativeProcesses;
+    }
+
 }

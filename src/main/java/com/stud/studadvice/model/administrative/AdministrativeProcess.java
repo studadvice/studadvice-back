@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
@@ -16,7 +17,9 @@ public class AdministrativeProcess {
     private Informations informations;
     private List<Step> stepList;
     private List<Resource> resourceList;
-    private List<ObjectId> requiredDocumentsList;
+
+    @DocumentReference(lazy = true)
+    private Category category;
 
     public AdministrativeProcess() {
     }
@@ -53,11 +56,11 @@ public class AdministrativeProcess {
         this.stepList = stepList;
     }
 
-    public List<ObjectId> getRequiredDocumentsList() {
-        return requiredDocumentsList;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setRequiredDocumentsList(List<ObjectId> requiredDocumentsList) {
-        this.requiredDocumentsList = requiredDocumentsList;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

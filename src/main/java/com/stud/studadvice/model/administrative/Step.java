@@ -1,10 +1,13 @@
 package com.stud.studadvice.model.administrative;
 
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+
 import java.util.List;
 
 public class Step {
     private int stepNumber;
     private Informations informations;
+    @DocumentReference
     private List<RequiredDocument> requiredDocumentList;
 
     public Step() {
