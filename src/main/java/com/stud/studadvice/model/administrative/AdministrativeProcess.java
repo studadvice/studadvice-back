@@ -1,5 +1,7 @@
 package com.stud.studadvice.model.administrative;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 
 import org.springframework.data.annotation.Id;
@@ -9,6 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Document
 public class AdministrativeProcess {
     @Field("_id")
@@ -22,45 +26,5 @@ public class AdministrativeProcess {
     private Category category;
 
     public AdministrativeProcess() {
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public Informations getInformations() {
-        return informations;
-    }
-
-    public void setInformations(Informations informations) {
-        this.informations = informations;
-    }
-
-    public List<Resource> getResourceList() {
-        return resourceList;
-    }
-
-    public void setResourceList(List<Resource> resourceList) {
-        this.resourceList = resourceList;
-    }
-
-    public List<Step> getStepList() {
-        return stepList;
-    }
-
-    public void setStepList(List<Step> stepList) {
-        this.stepList = stepList;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 }
