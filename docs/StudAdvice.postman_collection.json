@@ -10,29 +10,11 @@
 			"name": "administrative-process",
 			"item": [
 				{
-					"name": "getAdministrativeProcessCategories",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{base-url}}/administrative-process/categories"
-					},
-					"response": []
-				},
-				{
-					"name": "getAdministrativeProcessSubCategories",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{base-url}}/administrative-process/{category}/sub-categories"
-					},
-					"response": []
-				},
-				{
 					"name": "getAdministrativeProcessById",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base-url}}/administrative-process/{id}"
+						"url": "{{base-url}}/administrative-process/{{administrative-process-id}}"
 					},
 					"response": []
 				},
@@ -41,6 +23,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"informations\": {\n    \"name\": \"Titre du processus administratif\",\n    \"description\": \"Description du processus administratif\",\n    \"image\": \"image.png\"\n  },\n  \"resourceList\": [\n    {\n      \"name\": \"Ressource 1\",\n      \"url\": \"URL de la ressource 1\",\n      \"image\": \"image2.png\"\n    },\n    {\n      \"name\": \"Ressource 2\",\n      \"url\": \"URL de la ressource 2\",\n      \"image\": \"image3.png\"\n    }\n  ],\n  \"stepList\": [\n    {\n      \"stepNumber\": 1,\n      \"informations\": {\n        \"title\": \"Titre de l'étape 1\",\n        \"description\": \"Description de l'étape 1\",\n        \"image\": \"image4.png\"\n      },\n      \"requiredDocumentList\": [{\"id\":\"6553308588e5e022d404d244\"}]\n    },\n    {\n      \"stepNumber\": 2,\n      \"informations\": {\n        \"title\": \"Titre de l'étape 2\",\n        \"description\": \"Description de l'étape 2\",\n        \"image\": \"image7.png\"\n      },\n      \"requiredDocumentList\": [{\"id\":\"6553308588e5e022d404d244\"}]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": "{{base-url}}/administrative-process"
 					},
 					"response": []
@@ -50,7 +41,16 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
-						"url": "{{base-url}}/administrative-process/{id}"
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"informations\": {\n    \"name\": \"Titre du processus administratif changed\",\n    \"description\": \"Description du processus administratif\",\n    \"image\": \"image.png\"\n  },\n  \"resourceList\": [\n    {\n      \"name\": \"Ressource 1\",\n      \"url\": \"URL de la ressource 1\",\n      \"image\": \"image2.png\"\n    },\n    {\n      \"name\": \"Ressource 2\",\n      \"url\": \"URL de la ressource 2\",\n      \"image\": \"image3.png\"\n    }\n  ],\n  \"stepList\": [\n    {\n      \"stepNumber\": 1,\n      \"informations\": {\n        \"title\": \"Titre de l'étape 1\",\n        \"description\": \"Description de l'étape 1\",\n        \"image\": \"image4.png\"\n      },\n      \"requiredDocumentList\": [{\"id\":\"65532d563bbdd7754a4e018d\"}]\n    },\n    {\n      \"stepNumber\": 2,\n      \"informations\": {\n        \"title\": \"Titre de l'étape 2\",\n        \"description\": \"Description de l'étape 2\",\n        \"image\": \"image7.png\"\n      },\n      \"requiredDocumentList\": [{\"id\":\"65532d563bbdd7754a4e018d\"}]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base-url}}/administrative-process/{{administrative-process-id}}"
 					},
 					"response": []
 				},
@@ -60,6 +60,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": "{{base-url}}/administrative-process/2"
+					},
+					"response": []
+				},
+				{
+					"name": "getAdministrativeProcesses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/administrative-process"
 					},
 					"response": []
 				}
@@ -82,7 +91,16 @@
 					"request": {
 						"method": "POST",
 						"header": [],
-						"url": "{{base-url}}"
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Offre spéciale\",\n    \"description\": \"Profitez de cette offre spéciale pour économiser sur votre prochain achat.\",\n    \"category\": \"Promotions\",\n    \"image\": \"https://example.com/deal-image.jpg\",\n    \"startDate\": \"2023-11-01\",\n    \"endDate\": \"2023-11-30\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base-url}}/deals"
 					},
 					"response": []
 				},
@@ -91,7 +109,16 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
-						"url": "{{base-url}}/{id}"
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Offre spéciale modifiée\",\n    \"description\": \"Profitez de cette offre spéciale pour économiser sur votre prochain achat.\",\n    \"category\": \"Promotions\",\n    \"image\": \"https://example.com/deal-image.jpg\",\n    \"startDate\": \"2023-11-01\",\n    \"endDate\": \"2023-11-30\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base-url}}/deals/{{deal-id}}"
 					},
 					"response": []
 				},
@@ -100,20 +127,181 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "{{base-url}}/{id}"
+						"url": "{{base-url}}/deals/{{deal-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "getDealById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/deals/{{deal-id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "getCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base-url}}/categories/{{category-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "updateCategory",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"informations\":{\n      \"name\": \"transport\",\n      \"description\": \"toto\",\n      \"image\": \"https://example.com/tansport.jpg\"\n    },\n    \"administrativeProcesses\":[{\"id\":\"65532daa3bbdd7754a4e018e\"}]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base-url}}/categories/{{category-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "getCategoryById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/categories/{{category-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "createCategory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"informations\":{\n      \"name\": \"transport\",\n      \"description\": \"toto\",\n      \"image\": \"https://example.com/tansport.jpg\"\n    },\n    \"administrativeProcesses\":[{\"id\":\"655330cb88e5e022d404d245\"}]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base-url}}/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "getAdministrativeProcessesByCategoryId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/categories?categoryId={{category-id}}",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "{{category-id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "required-document",
+			"item": [
+				{
+					"name": "getAllRequiredDocument",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/required-document"
+					},
+					"response": []
+				},
+				{
+					"name": "getRequiredDocumentbyId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base-url}}/required-document/{{requiredDocument-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "createRequiredDocument",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"informations\": {\n    \"name\": \"Titre du document 1\",\n    \"description\": \"Description du document 1\",\n    \"image\": \"image5.png\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base-url}}/required-document"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteRequiredDocument",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base-url}}/required-document/{{requiredDocument-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "updateRequiredDocument",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"informations\": {\n    \"name\": \"Titre du document 1 UPDATE\",\n    \"description\": \"Description du document 1\",\n    \"image\": \"image5.png\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base-url}}/required-document/{{requiredDocument-id}}"
 					},
 					"response": []
 				}
 			]
 		}
 	],
-	"auth": {
-		"type": "basic",
-		"basic": {
-			"password": "{{generated-password}}",
-			"username": "user"
-		}
-	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -137,12 +325,42 @@
 	"variable": [
 		{
 			"key": "generated-password",
-			"value": "390c1a09-bf00-40f5-9606-0589f2449c22",
+			"value": "admin",
 			"type": "string"
 		},
 		{
 			"key": "base-url",
 			"value": "localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "category-id",
+			"value": "65532e233bbdd7754a4e018f",
+			"type": "string"
+		},
+		{
+			"key": "category-name",
+			"value": "transport",
+			"type": "string"
+		},
+		{
+			"key": "sub-category-name",
+			"value": "metro",
+			"type": "string"
+		},
+		{
+			"key": "administrative-process-id",
+			"value": "655330cb88e5e022d404d245",
+			"type": "string"
+		},
+		{
+			"key": "deal-id",
+			"value": "65532e923bbdd7754a4e0190",
+			"type": "string"
+		},
+		{
+			"key": "requiredDocument-id",
+			"value": "6553308588e5e022d404d244",
 			"type": "string"
 		}
 	]

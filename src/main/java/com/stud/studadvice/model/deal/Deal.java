@@ -1,11 +1,14 @@
-package com.stud.studadvice.model.deals;
+package com.stud.studadvice.model.deal;
 
 import org.bson.types.ObjectId;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
-public class Deals {
+public class Deal {
+    @Id
     @Field("_id")
     private ObjectId id;
     private String title;
@@ -15,7 +18,7 @@ public class Deals {
     private String startDate;
     private String endDate;
 
-    public Deals() {
+    public Deal() {
     }
 
     public ObjectId getId() {
