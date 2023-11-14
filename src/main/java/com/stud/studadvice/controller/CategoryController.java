@@ -41,10 +41,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Category found", content = @Content(schema = @Schema(implementation = Category.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @GetMapping("/{id}")
-    public Category getCategoryById(@PathVariable ObjectId id) {
+    @GetMapping("/{categoryId}")
+    public Category getCategoryById(@PathVariable ObjectId categoryId) {
         try {
-            return categoryService.getCategoryById(id);
+            return categoryService.getCategoryById(categoryId);
         }
         catch (CategoryException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
@@ -71,10 +71,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Category updated successfully", content = @Content(schema = @Schema(implementation = Category.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @PutMapping("/{id}")
-    public Category updateCategoryById(@PathVariable ObjectId id, @RequestBody Category category) {
+    @PutMapping("/{categoryId}")
+    public Category updateCategoryById(@PathVariable ObjectId categoryId, @RequestBody Category category) {
         try{
-            return categoryService.updateCategoryById(id, category);
+            return categoryService.updateCategoryById(categoryId, category);
         }
         catch (CategoryException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);

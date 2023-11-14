@@ -26,8 +26,8 @@ public class AdministrativeProcessService {
         return administrativeProcessRepository.findAll();
     }
 
-    public AdministrativeProcess getAdministrativeProcessById(ObjectId id) throws AdministrativeProcessException {
-        return administrativeProcessRepository.findById(id)
+    public AdministrativeProcess getAdministrativeProcessById(ObjectId administrativeProcessId) throws AdministrativeProcessException {
+        return administrativeProcessRepository.findById(administrativeProcessId)
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
     }
 
@@ -43,9 +43,9 @@ public class AdministrativeProcessService {
         return administrativeProcessRepository.save(administrativeProcess);
     }
 
-    public AdministrativeProcess updateAdministrativeProcess(ObjectId id, AdministrativeProcess updatedProcess) throws AdministrativeProcessException {
+    public AdministrativeProcess updateAdministrativeProcess(ObjectId administrativeProcessId, AdministrativeProcess updatedProcess) throws AdministrativeProcessException {
 
-        AdministrativeProcess existingProcess = administrativeProcessRepository.findById(id)
+        AdministrativeProcess existingProcess = administrativeProcessRepository.findById(administrativeProcessId)
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
 
 
@@ -63,10 +63,10 @@ public class AdministrativeProcessService {
         return administrativeProcessRepository.save(existingProcess);
     }
 
-    public void deleteAdministrativeProcess(ObjectId id) throws AdministrativeProcessException {
-        if (!administrativeProcessRepository.existsById(id)) {
+    public void deleteAdministrativeProcess(ObjectId administrativeProcessId) throws AdministrativeProcessException {
+        if (!administrativeProcessRepository.existsById(administrativeProcessId)) {
             throw new AdministrativeProcessException("Administrative process to delete not found");
         }
-        administrativeProcessRepository.deleteById(id);
+        administrativeProcessRepository.deleteById(administrativeProcessId);
     }
 }

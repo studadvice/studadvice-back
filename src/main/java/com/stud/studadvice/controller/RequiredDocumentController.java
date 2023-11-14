@@ -34,7 +34,7 @@ public class RequiredDocumentController {
     /**
      * Retrieves a required document by its ID.
      *
-     * @param id The ID of the required document to retrieve.
+     * @param requiredDocumentId The ID of the required document to retrieve.
      * @return The required document with the specified ID.
      */
     @Operation(summary = "Retrieve a required document by ID")
@@ -42,10 +42,10 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "200", description = "Required document retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Required document process not found"),
     })
-    @GetMapping("/{id}")
-    public RequiredDocument getRequiredDocumentById(@PathVariable ObjectId id) {
+    @GetMapping("/{requiredDocumentId}")
+    public RequiredDocument getRequiredDocumentById(@PathVariable ObjectId requiredDocumentId) {
         try {
-            return requiredDocumentService.getRequiredDocumentById(id);
+            return requiredDocumentService.getRequiredDocumentById(requiredDocumentId);
         }
         catch (RequiredDocumentException requiredDocumentException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
@@ -71,7 +71,7 @@ public class RequiredDocumentController {
     /**
      * Updates an existing required document.
      *
-     * @param id            The ID of the required document to update.
+     * @param requiredDocumentId            The ID of the required document to update.
      * @param requiredDocumentUpdated The updated required document data.
      * @return The updated required document.
      */
@@ -80,10 +80,10 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "200", description = "Required document updated successfully"),
             @ApiResponse(responseCode = "404", description = "Required document not found"),
     })
-    @PutMapping("/{id}")
-    public RequiredDocument updateRequiredDocument(@PathVariable ObjectId id, @RequestBody RequiredDocument requiredDocumentUpdated) {
+    @PutMapping("/{requiredDocumentId}")
+    public RequiredDocument updateRequiredDocument(@PathVariable ObjectId requiredDocumentId, @RequestBody RequiredDocument requiredDocumentUpdated) {
         try {
-            return requiredDocumentService.updateRequiredDocument(id,requiredDocumentUpdated);
+            return requiredDocumentService.updateRequiredDocument(requiredDocumentId,requiredDocumentUpdated);
         }
         catch (RequiredDocumentException requiredDocumentException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
@@ -93,17 +93,17 @@ public class RequiredDocumentController {
     /**
      * Deletes a required document by its ID.
      *
-     * @param id The unique ID of the required document to delete.
+     * @param requiredDocumentId The unique ID of the required document to delete.
      */
     @Operation(summary = "Delete a required document process by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Required document deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Required document not found"),
     })
-    @DeleteMapping("/{id}")
-    public void deleteRequiredDocument(@PathVariable ObjectId id) {
+    @DeleteMapping("/{requiredDocumentId}")
+    public void deleteRequiredDocument(@PathVariable ObjectId requiredDocumentId) {
         try{
-            requiredDocumentService.deleteRequiredDocument(id);
+            requiredDocumentService.deleteRequiredDocument(requiredDocumentId);
         }
         catch (RequiredDocumentException requiredDocumentException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);

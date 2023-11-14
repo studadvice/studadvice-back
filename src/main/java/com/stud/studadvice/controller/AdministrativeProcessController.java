@@ -37,7 +37,7 @@ public class AdministrativeProcessController {
     /**
      * Retrieves an administrative process by its unique ID.
      *
-     * @param id The ID of the administrative process to retrieve.
+     * @param administrativeProcessId The ID of the administrative process to retrieve.
      * @return The administrative process with the specified ID.
      */
     @Operation(summary = "Retrieve an administrative process by ID")
@@ -45,10 +45,10 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative process retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
-    @GetMapping("/{id}")
-    public AdministrativeProcess getAdministrativeProcessById(@PathVariable ObjectId id) {
+    @GetMapping("/{administrativeProcessId}")
+    public AdministrativeProcess getAdministrativeProcessById(@PathVariable ObjectId administrativeProcessId) {
         try {
-            return administrativeProcessService.getAdministrativeProcessById(id);
+            return administrativeProcessService.getAdministrativeProcessById(administrativeProcessId);
         }
         catch (AdministrativeProcessException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
@@ -79,7 +79,7 @@ public class AdministrativeProcessController {
     /**
      * Updates an existing administrative process.
      *
-     * @param id            The ID of the administrative process to update.
+     * @param administrativeProcessId            The ID of the administrative process to update.
      * @param updatedProcess The updated administrative process data.
      * @return The updated administrative process.
      */
@@ -88,10 +88,10 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative process updated successfully"),
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
-    @PutMapping("/{id}")
-    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId id, @RequestBody AdministrativeProcess updatedProcess) {
+    @PutMapping("/{administrativeProcessId}")
+    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @RequestBody AdministrativeProcess updatedProcess) {
         try {
-            return administrativeProcessService.updateAdministrativeProcess(id,updatedProcess);
+            return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess);
         }
         catch (AdministrativeProcessException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
@@ -101,17 +101,17 @@ public class AdministrativeProcessController {
     /**
      * Deletes an administrative process by its ID.
      *
-     * @param id The unique ID of the administrative process to delete.
+     * @param administrativeProcessId The unique ID of the administrative process to delete.
      */
     @Operation(summary = "Delete an administrative process by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Administrative process deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
-    @DeleteMapping("/{id}")
-    public void deleteAdministrativeProcess(@PathVariable ObjectId id) {
+    @DeleteMapping("/{administrativeProcessId}")
+    public void deleteAdministrativeProcess(@PathVariable ObjectId administrativeProcessId) {
         try{
-            administrativeProcessService.deleteAdministrativeProcess(id);
+            administrativeProcessService.deleteAdministrativeProcess(administrativeProcessId);
         }
         catch (AdministrativeProcessException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);

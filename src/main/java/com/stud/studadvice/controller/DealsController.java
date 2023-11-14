@@ -41,7 +41,7 @@ public class DealsController {
     /**
      * Retrieves a deal by its ID.
      *
-     * @param id The ID of the deal to retrieve.
+     * @param dealId The ID of the deal to retrieve.
      * @return The deals with the specified ID.
      */
     @Operation(summary = "Retrieve a deal by ID")
@@ -49,10 +49,10 @@ public class DealsController {
             @ApiResponse(responseCode = "200", description = "Deal retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Deal not found"),
     })
-    @GetMapping("/{id}")
-    public Deal getDealById(@PathVariable ObjectId id) {
+    @GetMapping("/{dealId}")
+    public Deal getDealById(@PathVariable ObjectId dealId) {
         try {
-            return dealsService.getDealById(id);
+            return dealsService.getDealById(dealId);
         } catch (DealException dealException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
         }
@@ -78,7 +78,7 @@ public class DealsController {
     /**
      * Updates an existing student deal.
      *
-     * @param id           The unique ID of the student deal to update.
+     * @param dealId           The unique ID of the student deal to update.
      * @param updatedDeal The updated student deal data.
      * @return The updated student deal.
      */
@@ -87,10 +87,10 @@ public class DealsController {
             @ApiResponse(responseCode = "200", description = "Student deal updated successfully"),
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
-    @PutMapping("/{id}")
-    public Deal updateDeal(@PathVariable ObjectId id, @RequestBody Deal updatedDeal) {
+    @PutMapping("/{dealId}")
+    public Deal updateDeal(@PathVariable ObjectId dealId, @RequestBody Deal updatedDeal) {
         try {
-            return dealsService.updateDeal(id, updatedDeal);
+            return dealsService.updateDeal(dealId, updatedDeal);
         } catch (DealException dealException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
         }
@@ -99,17 +99,17 @@ public class DealsController {
     /**
      * Deletes a student deal by its unique ID.
      *
-     * @param id The unique ID of the student deal to delete.
+     * @param dealId The unique ID of the student deal to delete.
      */
     @Operation(summary = "Delete a student deal by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Student deal deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
-    @DeleteMapping("/{id}")
-    public void deleteDeal(@PathVariable ObjectId id) {
+    @DeleteMapping("/{dealId}")
+    public void deleteDeal(@PathVariable ObjectId dealId) {
         try {
-            dealsService.deleteDeal(id);
+            dealsService.deleteDeal(dealId);
         } catch (DealException dealException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
         }

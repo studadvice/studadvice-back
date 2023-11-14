@@ -1,6 +1,5 @@
 package com.stud.studadvice.service;
 
-import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.repository.deals.DealsRepository;
@@ -24,8 +23,8 @@ public class DealsService {
         return dealsRepository.save(deal);
     }
 
-    public Deal updateDeal(ObjectId id, Deal updatedDeal) throws DealException {
-        Optional<Deal> existingDeal = dealsRepository.findById(id);
+    public Deal updateDeal(ObjectId dealId, Deal updatedDeal) throws DealException {
+        Optional<Deal> existingDeal = dealsRepository.findById(dealId);
         if (existingDeal.isPresent()) {
             Deal dealToUpdate = existingDeal.get();
 
@@ -42,16 +41,16 @@ public class DealsService {
         }
     }
 
-    public void deleteDeal(ObjectId id) throws DealException {
-        if (dealsRepository.existsById(id)) {
-            dealsRepository.deleteById(id);
+    public void deleteDeal(ObjectId dealId) throws DealException {
+        if (dealsRepository.existsById(dealId)) {
+            dealsRepository.deleteById(dealId);
         } else {
             throw new DealException("Student deal not found");
         }
     }
 
-    public Deal getDealById(ObjectId id) throws DealException {
-        return dealsRepository.findById(id)
+    public Deal getDealById(ObjectId dealId) throws DealException {
+        return dealsRepository.findById(dealId)
                 .orElseThrow(() -> new DealException("Student deal not found"));
     }
 }
