@@ -18,7 +18,6 @@ public class RequiredDocument {
     @Id
     private ObjectId id;
     private Informations informations;
-    @DocumentReference(lazy = true)
     private List<Step> stepList;
     public RequiredDocument() {
     }

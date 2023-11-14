@@ -22,7 +22,6 @@ public class AdministrativeProcess {
     private List<Step> stepList;
     private List<Resource> resourceList;
 
-    @DocumentReference(lazy = true)
     private Category category;
 
     public AdministrativeProcess() {
