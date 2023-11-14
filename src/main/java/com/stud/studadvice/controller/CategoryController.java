@@ -102,13 +102,26 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @GetMapping("/categories/{categoryId})")
+    @GetMapping("/{categoryId})")
     public List<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId){
         try {
             return categoryService.getAdministrativeProcessByCategoryId(categoryId);
         }
         catch (CategoryException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
+        }
+    }
+
+    @PostMapping("/{categoryId})")
+    public Category addAdministrativeProcessToAnExistingCategory(@PathVariable ObjectId categoryId,@RequestParam ObjectId administrativeProcessId){
+        try {
+            return categoryService.addAdministrativeProcessToAnExistingCategory(categoryId,administrativeProcessId);
+        }
+        catch (CategoryException categoryException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
+        }
+        catch (AdministrativeProcessException administrativeProcessException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 

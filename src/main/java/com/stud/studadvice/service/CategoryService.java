@@ -70,4 +70,20 @@ public class CategoryService {
 
         return existingCategory.getAdministrativeProcesses();
     }
+
+    public Category addAdministrativeProcessToAnExistingCategory(ObjectId categoryId, ObjectId administrativeProcessId) throws CategoryException, AdministrativeProcessException {
+        Category existingCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException("Category not found"));
+
+        AdministrativeProcess existingAdministrativeProcess = administrativeProcessRepository.findById(administrativeProcessId)
+                .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
+
+        List<AdministrativeProcess> administrativeProcesses = existingCategory.getAdministrativeProcesses();
+        administrativeProcesses.add(existingAdministrativeProcess);
+
+        existingCategory.setAdministrativeProcesses(administrativeProcesses);
+
+        return categoryRepository.save(existingCategory);
+    }
+
 }
