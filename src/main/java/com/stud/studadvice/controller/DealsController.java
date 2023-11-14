@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,27 @@ public class DealsController {
     public List<Deal> getDeals() {
         return dealsService.getAllDeals();
     }
+
+    /**
+     * Retrieves a deal by its ID.
+     *
+     * @param id The ID of the deal to retrieve.
+     * @return The deals with the specified ID.
+     */
+    @Operation(summary = "Retrieve a deal by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deal retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Deal not found"),
+    })
+    @GetMapping("/{id}")
+    public Deal getDealById(@PathVariable ObjectId id) {
+        try {
+            return dealsService.getDealById(id);
+        } catch (DealException dealException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
+        }
+    }
+
 
     /**
      * Creates a new student deal.

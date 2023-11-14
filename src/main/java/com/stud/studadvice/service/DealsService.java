@@ -1,5 +1,6 @@
 package com.stud.studadvice.service;
 
+import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.repository.deals.DealsRepository;
@@ -47,5 +48,10 @@ public class DealsService {
         } else {
             throw new DealException("Student deal not found");
         }
+    }
+
+    public Deal getDealById(ObjectId id) throws DealException {
+        return dealsRepository.findById(id)
+                .orElseThrow(() -> new DealException("Student deal not found"));
     }
 }
