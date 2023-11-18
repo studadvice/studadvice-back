@@ -122,4 +122,25 @@ public class AdministrativeProcessController {
         }
     }
 
+
+    /**
+     * Retrieves administrative processes based on age, nationalities, and universities.
+     *
+     * @param age          The age criterion.
+     * @param nationalities The list of nationalities criterion.
+     * @param universities  The list of universities criterion.
+     * @return A list of administrative processes based on the specified criteria.
+     */
+    @Operation(summary = "Retrieve administrative processes by age, nationalities, and universities")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
+    })
+    @GetMapping("/criterias")
+    public List<AdministrativeProcess> getAdministrativeProcessesByCriteria(
+            @RequestParam(required = false) Integer age,
+            @RequestParam(required = false) List<String> nationalities,
+            @RequestParam(required = false) List<String> universities) {
+        return administrativeProcessService.getAdministrativeProcessesByCriteria(age, nationalities, universities);
+    }
+
 }
