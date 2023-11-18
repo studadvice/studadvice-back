@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -71,6 +72,7 @@ public class DealsController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Deal createDeal(@RequestBody Deal newDeal) {
         return dealsService.createDeal(newDeal);
     }
@@ -88,6 +90,7 @@ public class DealsController {
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
     @PutMapping("/{dealId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Deal updateDeal(@PathVariable ObjectId dealId, @RequestBody Deal updatedDeal) {
         try {
             return dealsService.updateDeal(dealId, updatedDeal);
@@ -107,6 +110,7 @@ public class DealsController {
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
     @DeleteMapping("/{dealId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteDeal(@PathVariable ObjectId dealId) {
         try {
             dealsService.deleteDeal(dealId);

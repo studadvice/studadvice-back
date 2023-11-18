@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -64,6 +65,7 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RequiredDocument createRequiredDocument(@RequestBody RequiredDocument requiredDocument) {
         return requiredDocumentService.createRequiredDocument(requiredDocument);
     }
@@ -81,6 +83,7 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "404", description = "Required document not found"),
     })
     @PutMapping("/{requiredDocumentId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RequiredDocument updateRequiredDocument(@PathVariable ObjectId requiredDocumentId, @RequestBody RequiredDocument requiredDocumentUpdated) {
         try {
             return requiredDocumentService.updateRequiredDocument(requiredDocumentId,requiredDocumentUpdated);
@@ -101,6 +104,7 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "404", description = "Required document not found"),
     })
     @DeleteMapping("/{requiredDocumentId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteRequiredDocument(@PathVariable ObjectId requiredDocumentId) {
         try{
             requiredDocumentService.deleteRequiredDocument(requiredDocumentId);
