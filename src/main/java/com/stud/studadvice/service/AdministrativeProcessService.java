@@ -10,12 +10,18 @@ import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class AdministrativeProcessService {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     @Autowired
     private RequiredDocumentRepository requiredDocumentRepository;
 
@@ -68,5 +74,25 @@ public class AdministrativeProcessService {
             throw new AdministrativeProcessException("Administrative process to delete not found");
         }
         administrativeProcessRepository.deleteById(administrativeProcessId);
+    }
+
+    public List<AdministrativeProcess> getAdministrativeProcessesByCriteria(Integer age, List<String> nationalities, List<String> universities) {
+        Criteria criteria = new Criteria();
+
+        if (age != null) {
+            criteria.and("informations.age").is(age);
+        }
+
+        if (nationalities != null && !nationalities.isEmpty()) {
+            criteria.and("informations.nationalities").in(nationalities);
+        }
+
+        if (universities != null && !universities.isEmpty()) {
+            criteria.and("informations.universities").in(universities);
+        }
+
+        Query query = new Query(criteria);
+
+        return mongoTemplate.find(query, AdministrativeProcess.class);
     }
 }
