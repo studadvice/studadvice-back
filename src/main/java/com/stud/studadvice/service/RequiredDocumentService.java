@@ -33,7 +33,9 @@ public class RequiredDocumentService {
         RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
                 .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
 
-        requiredDocument.setInformations(requiredDocumentUpdated.getInformations());
+        requiredDocument.setDescription(requiredDocumentUpdated.getDescription());
+        requiredDocument.setImage(requiredDocument.getImage());
+        requiredDocument.setName(requiredDocument.getName());
 
         return requiredDocumentRepository.save(requiredDocument);
     }

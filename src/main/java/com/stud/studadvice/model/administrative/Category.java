@@ -18,7 +18,9 @@ public class Category {
     @Field("_id")
     @Id
     private ObjectId id;
-    private Informations informations;
+    private String name;
+    private String description;
+    private String image;
     @DocumentReference
     private List<AdministrativeProcess> administrativeProcesses;
     public Category() {

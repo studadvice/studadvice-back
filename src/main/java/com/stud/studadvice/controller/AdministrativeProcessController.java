@@ -25,16 +25,6 @@ public class AdministrativeProcessController {
     private AdministrativeProcessService administrativeProcessService;
 
     /**
-     * Retrieves all the administrative processes.
-     * @return A list of administrative processes.
-     */
-    @Operation(summary = "Retrieve all administrative processes")
-    @GetMapping
-    private List<AdministrativeProcess> getAdministrativeProcess(){
-        return administrativeProcessService.getAdministrativeProcess();
-    }
-
-    /**
      * Retrieves an administrative process by its unique ID.
      *
      * @param administrativeProcessId The ID of the administrative process to retrieve.
@@ -116,6 +106,43 @@ public class AdministrativeProcessController {
         catch (AdministrativeProcessException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
+    }
+
+
+    /**
+     * Retrieves administrative processes based on age, nationalities, and universities.
+     *
+     * @param minAge          The age criterion.
+     * @param nationalities The list of nationalities criterion.
+     * @param universities  The list of universities criterion.
+     * @return A list of administrative processes based on the specified criteria.
+     */
+    @Operation(summary = "Retrieve administrative processes by age, nationalities, and universities")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
+    })
+    @GetMapping
+    public List<AdministrativeProcess> getAdministrativeProcesses(
+            @RequestParam(required = false) Integer minAge,
+            @RequestParam(required = false) Integer maxAge,
+            @RequestParam(required = false) List<String> nationalities,
+            @RequestParam(required = false) List<String> universities) {
+        return administrativeProcessService.getAdministrativeProcesses(minAge, maxAge, nationalities, universities);
+    }
+
+    /**
+     * Searches for administrative processes based on a text search.
+     *
+     * @param searchText The text to search for in the administrative processes.
+     * @return A list of administrative processes matching the search criteria.
+     */
+    @Operation(summary = "Search for administrative processes by text")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
+    })
+    @GetMapping("/search")
+    public List<AdministrativeProcess> searchAdministrativeProcess(@RequestParam String searchText){
+        return administrativeProcessService.searchAdministrativeProcess(searchText);
     }
 
 }
