@@ -103,9 +103,12 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{categoryId})")
-    public List<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId){
+    public List<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId, @RequestParam(required = false) Integer minAge,
+                                                                            @RequestParam(required = false) Integer maxAge,
+                                                                            @RequestParam(required = false) List<String> nationalities,
+                                                                            @RequestParam(required = false) List<String> universities){
         try {
-            return categoryService.getAdministrativeProcessByCategoryId(categoryId);
+            return categoryService.getAdministrativeProcessByCategoryId(categoryId, minAge, maxAge,nationalities,universities);
         }
         catch (CategoryException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
