@@ -134,4 +134,19 @@ public class AdministrativeProcessController {
         return administrativeProcessService.getAdministrativeProcesses(minAge, maxAge, nationalities, universities);
     }
 
+    /**
+     * Searches for administrative processes based on a text search.
+     *
+     * @param searchText The text to search for in the administrative processes.
+     * @return A list of administrative processes matching the search criteria.
+     */
+    @Operation(summary = "Search for administrative processes by text")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
+    })
+    @GetMapping("/search")
+    public List<AdministrativeProcess> searchAdministrativeProcess(@RequestParam String searchText){
+        return administrativeProcessService.searchAdministrativeProcess(searchText);
+    }
+
 }
