@@ -11,12 +11,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 
 /**
  * Controller for managing student deals.
@@ -35,8 +37,11 @@ public class DealsController {
      */
     @Operation(summary = "Retrieve a list of all student deals")
     @GetMapping
-    public List<Deal> getDeals() {
-        return dealsService.getAllDeals();
+    public Page<Deal> getDeals(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                               @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return dealsService.getDeals(pageable);
     }
 
     /**
@@ -117,5 +122,24 @@ public class DealsController {
         } catch (DealException dealException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
         }
+    }
+
+    /**
+     * Searches for deals based on a text search.
+     *
+     * @param searchText The text to search for in the deals.
+     * @return A list of the deals matching the search criteria.
+     */
+    @Operation(summary = "Search for deals by text")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deals retrieved successfully"),
+    })
+    @GetMapping("/search")
+    public Page<Deal> searchDeals(@RequestParam String searchText,
+                                  @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                  @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+        return dealsService.searchDeals(searchText,pageable);
     }
 }

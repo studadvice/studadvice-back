@@ -14,6 +14,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +36,11 @@ public class CategoryController {
 
     @Operation(summary = "Get all categories")
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    public Page<Category> getCategories(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                        @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return categoryService.getCategories(pageable);
     }
 
     @Operation(summary = "Get a category by id")
@@ -107,12 +113,15 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{categoryId})")
-    public List<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId, @RequestParam(required = false) Integer minAge,
+    public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId, @RequestParam(required = false) Integer minAge,
                                                                             @RequestParam(required = false) Integer maxAge,
                                                                             @RequestParam(required = false) List<String> nationalities,
-                                                                            @RequestParam(required = false) List<String> universities){
+                                                                            @RequestParam(required = false) List<String> universities,
+                                                                            @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                                                            @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         try {
-            return categoryService.getAdministrativeProcessByCategoryId(categoryId, minAge, maxAge,nationalities,universities);
+            return categoryService.getAdministrativeProcessByCategoryId(categoryId, minAge, maxAge,nationalities,universities,pageable);
         }
         catch (CategoryException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);

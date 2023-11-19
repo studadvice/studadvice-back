@@ -2,18 +2,20 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.RequiredDocumentException;
 import com.stud.studadvice.model.administrative.RequiredDocument;
+import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.service.RequiredDocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/required-document")
@@ -28,8 +30,11 @@ public class RequiredDocumentController {
      */
     @Operation(summary = "Retrieve all required documents")
     @GetMapping
-    private List<RequiredDocument> getRequiredDocument(){
-        return requiredDocumentService.getRequiredDocument();
+    private Page<RequiredDocument> getRequiredDocuments(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                                        @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+        return requiredDocumentService.getRequiredDocuments(pageable);
     }
 
     /**
@@ -112,5 +117,24 @@ public class RequiredDocumentController {
         catch (RequiredDocumentException requiredDocumentException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
         }
+    }
+
+    /**
+     * Searches for required documents based on a text search.
+     *
+     * @param searchText The text to search for in the required documents.
+     * @return A list of the required documents matching the search criteria.
+     */
+    @Operation(summary = "Search for required documents by text")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Required documents retrieved successfully"),
+    })
+    @GetMapping("/search")
+    public Page<RequiredDocument> searchRequiredDocuments(@RequestParam String searchText,
+                                                          @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}")int page,
+                                                          @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+        return requiredDocumentService.searchRequiredDocuments(searchText,pageable);
     }
 }
