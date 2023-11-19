@@ -26,16 +26,6 @@ public class AdministrativeProcessController {
     private AdministrativeProcessService administrativeProcessService;
 
     /**
-     * Retrieves all the administrative processes.
-     * @return A list of administrative processes.
-     */
-    @Operation(summary = "Retrieve all administrative processes")
-    @GetMapping
-    private List<AdministrativeProcess> getAdministrativeProcess(){
-        return administrativeProcessService.getAdministrativeProcess();
-    }
-
-    /**
      * Retrieves an administrative process by its unique ID.
      *
      * @param administrativeProcessId The ID of the administrative process to retrieve.
@@ -126,7 +116,7 @@ public class AdministrativeProcessController {
     /**
      * Retrieves administrative processes based on age, nationalities, and universities.
      *
-     * @param age          The age criterion.
+     * @param minAge          The age criterion.
      * @param nationalities The list of nationalities criterion.
      * @param universities  The list of universities criterion.
      * @return A list of administrative processes based on the specified criteria.
@@ -135,12 +125,13 @@ public class AdministrativeProcessController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
-    @GetMapping("/criterias")
-    public List<AdministrativeProcess> getAdministrativeProcessesByCriteria(
-            @RequestParam(required = false) Integer age,
+    @GetMapping
+    public List<AdministrativeProcess> getAdministrativeProcesses(
+            @RequestParam(required = false) Integer minAge,
+            @RequestParam(required = false) Integer maxAge,
             @RequestParam(required = false) List<String> nationalities,
             @RequestParam(required = false) List<String> universities) {
-        return administrativeProcessService.getAdministrativeProcessesByCriteria(age, nationalities, universities);
+        return administrativeProcessService.getAdministrativeProcesses(minAge, maxAge, nationalities, universities);
     }
 
 }

@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 
 import com.stud.studadvice.model.administrative.Category;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,7 +51,9 @@ public class CategoryService {
                     .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
         }
 
-        existingCategory.setInformations(categoryUpdated.getInformations());
+        existingCategory.setDescription(categoryUpdated.getDescription());
+        existingCategory.setName(categoryUpdated.getName());
+        existingCategory.setImage(categoryUpdated.getImage());
         existingCategory.setAdministrativeProcesses(categoryUpdated.getAdministrativeProcesses());
 
         return categoryRepository.save(existingCategory);
@@ -64,7 +67,7 @@ public class CategoryService {
         categoryRepository.deleteById(categoryId);
     }
 
-    public List<AdministrativeProcess> getAdministrativeProcessByCategoryId(ObjectId categoryId) throws CategoryException {
+    public List<AdministrativeProcess> getAdministrativeProcessByCategoryId(ObjectId categoryId,Integer minAge,Integer maxAge,List<String> nationalities,List<String> universities) throws CategoryException {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException("Category not found"));
 
