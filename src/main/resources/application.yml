@@ -1,0 +1,12 @@
+#mongodb
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: Document
+    web:
+      pageable:
+        default-page-size: 10
+        default-page: 0
