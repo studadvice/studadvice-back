@@ -10,9 +10,11 @@ import java.util.List;
 @Setter
 public class Step {
     private int stepNumber;
-    private Informations informations;
+    private String name;
+    private String description;
+    private String image;
     @DocumentReference
-    private List<RequiredDocument> requiredDocumentList;
+    private List<RequiredDocument> requiredDocuments;
 
     public Step() {
     }

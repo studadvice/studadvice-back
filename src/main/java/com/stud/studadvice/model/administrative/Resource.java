@@ -9,6 +9,7 @@ public class Resource {
     private String name;
     private String url;
     private String image;
+    private String description;
 
     public Resource() {
     }
