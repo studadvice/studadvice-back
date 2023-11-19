@@ -6,7 +6,6 @@ import org.bson.types.ObjectId;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
@@ -18,11 +17,15 @@ public class AdministrativeProcess {
     @Field("_id")
     @Id
     private ObjectId id;
-    private Informations informations;
-    private List<Step> stepList;
-    private List<Resource> resourceList;
-
-    private Category category;
+    private String name;
+    private String description;
+    private String image;
+    private Integer minAge;
+    private Integer maxAge;
+    private List<String> nationalities;
+    private List<String> universities;
+    private List<Step> steps;
+    private List<Resource> resources;
 
     public AdministrativeProcess() {
     }

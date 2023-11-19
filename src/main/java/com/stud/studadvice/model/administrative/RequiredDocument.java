@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
@@ -17,8 +16,9 @@ public class RequiredDocument {
     @Field("_id")
     @Id
     private ObjectId id;
-    private Informations informations;
-    private List<Step> stepList;
+    private String name;
+    private String description;
+    private String image;
     public RequiredDocument() {
     }
 }
