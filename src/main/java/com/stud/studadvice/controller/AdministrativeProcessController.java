@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -122,12 +125,16 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
     @GetMapping
-    public List<AdministrativeProcess> getAdministrativeProcesses(
+    public Page<AdministrativeProcess> getAdministrativeProcesses(
             @RequestParam(required = false) Integer minAge,
             @RequestParam(required = false) Integer maxAge,
             @RequestParam(required = false) List<String> nationalities,
-            @RequestParam(required = false) List<String> universities) {
-        return administrativeProcessService.getAdministrativeProcesses(minAge, maxAge, nationalities, universities);
+            @RequestParam(required = false) List<String> universities,
+            @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+            @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return administrativeProcessService.getAdministrativeProcesses(minAge, maxAge, nationalities, universities,pageable);
     }
 
     /**
@@ -141,8 +148,12 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
     @GetMapping("/search")
-    public List<AdministrativeProcess> searchAdministrativeProcess(@RequestParam String searchText){
-        return administrativeProcessService.searchAdministrativeProcess(searchText);
+    public Page<AdministrativeProcess> searchAdministrativeProcess(@RequestParam String searchText,
+                                                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+        return administrativeProcessService.searchAdministrativeProcess(searchText,pageable);
     }
 
 }
