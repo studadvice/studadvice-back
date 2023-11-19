@@ -10,7 +10,8 @@ import org.bson.types.ObjectId;
 
 import com.stud.studadvice.model.administrative.Category;
 
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,8 +24,8 @@ public class CategoryService {
     @Autowired
     private AdministrativeProcessRepository administrativeProcessRepository;
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public Page<Category> getCategories(Pageable pageable) {
+        return categoryRepository.findAll(pageable);
     }
 
     public Category getCategoryById(ObjectId categoryId) throws CategoryException {
@@ -67,11 +68,9 @@ public class CategoryService {
         categoryRepository.deleteById(categoryId);
     }
 
-    public List<AdministrativeProcess> getAdministrativeProcessByCategoryId(ObjectId categoryId,Integer minAge,Integer maxAge,List<String> nationalities,List<String> universities) throws CategoryException {
-        Category existingCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException("Category not found"));
-
-        return existingCategory.getAdministrativeProcesses();
+    public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(ObjectId categoryId, Integer minAge, Integer maxAge, List<String> nationalities, List<String> universities, Pageable pageable) throws CategoryException {
+        // TODO
+        return null;
     }
 
     public Category addAdministrativeProcessToAnExistingCategory(ObjectId categoryId, ObjectId administrativeProcessId) throws CategoryException, AdministrativeProcessException {
