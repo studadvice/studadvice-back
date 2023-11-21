@@ -2,7 +2,6 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.RequiredDocumentException;
 import com.stud.studadvice.model.administrative.RequiredDocument;
-import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.service.RequiredDocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,11 +47,10 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "404", description = "Required document process not found"),
     })
     @GetMapping("/{requiredDocumentId}")
-    public RequiredDocument getRequiredDocumentById(@PathVariable ObjectId requiredDocumentId) {
+    public RequiredDocument getRequiredDocumentById(@PathVariable String requiredDocumentId) {
         try {
-            return requiredDocumentService.getRequiredDocumentById(requiredDocumentId);
-        }
-        catch (RequiredDocumentException requiredDocumentException){
+            return requiredDocumentService.getRequiredDocumentById(new ObjectId(requiredDocumentId));
+        } catch (RequiredDocumentException requiredDocumentException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
         }
     }
