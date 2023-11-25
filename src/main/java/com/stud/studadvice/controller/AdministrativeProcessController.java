@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,6 @@ public class AdministrativeProcessController {
     @Autowired
     private AdministrativeProcessService administrativeProcessService;
 
-    /**
-     * Retrieves an administrative process by its unique ID.
-     *
-     * @param administrativeProcessId The ID of the administrative process to retrieve.
-     * @return The administrative process with the specified ID.
-     */
     @Operation(summary = "Retrieve an administrative process by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Administrative process retrieved successfully"),
@@ -48,19 +43,13 @@ public class AdministrativeProcessController {
         }
     }
 
-    /**
-     * Creates a new administrative process.
-     *
-     * @param administrativeProcess The administrative process to be created.
-     * @return The newly created administrative process.
-     */
     @Operation(summary = "Create a new administrative process")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Administrative process created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
     @PostMapping
-    public AdministrativeProcess createAdministrativeProcess(@RequestBody AdministrativeProcess administrativeProcess) {
+    public AdministrativeProcess createAdministrativeProcess(@Valid @RequestBody AdministrativeProcess administrativeProcess) {
         try {
             return administrativeProcessService.createAdministrativeProcess(administrativeProcess);
         }
@@ -69,20 +58,13 @@ public class AdministrativeProcessController {
         }
     }
 
-    /**
-     * Updates an existing administrative process.
-     *
-     * @param administrativeProcessId            The ID of the administrative process to update.
-     * @param updatedProcess The updated administrative process data.
-     * @return The updated administrative process.
-     */
     @Operation(summary = "Update an existing administrative process")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Administrative process updated successfully"),
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
     @PutMapping("/{administrativeProcessId}")
-    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @RequestBody AdministrativeProcess updatedProcess) {
+    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestBody AdministrativeProcess updatedProcess) {
         try {
             return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess);
         }
@@ -91,11 +73,6 @@ public class AdministrativeProcessController {
         }
     }
 
-    /**
-     * Deletes an administrative process by its ID.
-     *
-     * @param administrativeProcessId The unique ID of the administrative process to delete.
-     */
     @Operation(summary = "Delete an administrative process by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Administrative process deleted successfully"),
@@ -112,37 +89,23 @@ public class AdministrativeProcessController {
     }
 
 
-    /**
-     * Retrieves administrative processes based on age, nationalities, and universities.
-     *
-     * @param minAge          The age criterion.
-     * @param nationalities The list of nationalities criterion.
-     * @param universities  The list of universities criterion.
-     * @return A list of administrative processes based on the specified criteria.
-     */
     @Operation(summary = "Retrieve administrative processes by age, nationalities, and universities")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
     @GetMapping
     public Page<AdministrativeProcess> getAdministrativeProcesses(
-            @RequestParam(required = false) Integer minAge,
-            @RequestParam(required = false) Integer maxAge,
-            @RequestParam(required = false) List<String> nationalities,
-            @RequestParam(required = false) List<String> universities,
+            @RequestParam(required = false) Integer age,
+            @RequestParam(required = false) String nationality,
+            @RequestParam(required = false) String university,
+            @RequestParam(required = false) String education,
             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        return administrativeProcessService.getAdministrativeProcesses(minAge, maxAge, nationalities, universities,pageable);
+        return administrativeProcessService.getAdministrativeProcesses(age, nationality, university,education,pageable);
     }
 
-    /**
-     * Searches for administrative processes based on a text search.
-     *
-     * @param searchText The text to search for in the administrative processes.
-     * @return A list of administrative processes matching the search criteria.
-     */
     @Operation(summary = "Search for administrative processes by text")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
