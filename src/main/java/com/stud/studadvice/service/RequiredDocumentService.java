@@ -1,8 +1,8 @@
 package com.stud.studadvice.service;
 
 import com.stud.studadvice.exception.RequiredDocumentException;
-import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.model.administrative.RequiredDocument;
+import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
 import org.bson.types.ObjectId;
@@ -25,6 +25,8 @@ public class RequiredDocumentService {
 
     @Autowired
     private RequiredDocumentRepository requiredDocumentRepository;
+    @Autowired
+    private AdministrativeProcessRepository administrativeProcessRepository;
 
     public Page<RequiredDocument> getRequiredDocuments(Pageable pageable) {
         return requiredDocumentRepository.findAll(pageable);
@@ -66,7 +68,7 @@ public class RequiredDocumentService {
 
         query.with(pageable);
 
-        long total = mongoTemplate.count(query, AdministrativeProcess.class);
+        long total = mongoTemplate.count(query, RequiredDocument.class);
 
         List<RequiredDocument> processes = mongoTemplate.find(query, RequiredDocument.class);
 
