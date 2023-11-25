@@ -3,6 +3,7 @@ package com.stud.studadvice.model.administrative;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +22,11 @@ public class Category {
     @Id
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
+    @NotNull(message = "Please, give a name for your category")
     private String name;
+    @NotNull(message = "Please, give a description for your category")
     private String description;
+    @NotNull(message = "Please, give an image for your category")
     private String image;
     @DocumentReference
     private List<AdministrativeProcess> administrativeProcesses;
