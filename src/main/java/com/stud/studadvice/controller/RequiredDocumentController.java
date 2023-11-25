@@ -27,7 +27,7 @@ public class RequiredDocumentController {
 
     @Operation(summary = "Retrieve all required documents")
     @GetMapping
-    private Page<RequiredDocument> getRequiredDocuments(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+    public Page<RequiredDocument> getRequiredDocuments(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
                                                         @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
 
         Pageable pageable = PageRequest.of(page, size);
@@ -104,4 +104,5 @@ public class RequiredDocumentController {
         Pageable pageable = PageRequest.of(page, size);
         return requiredDocumentService.searchRequiredDocuments(searchText,pageable);
     }
+
 }
