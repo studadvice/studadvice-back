@@ -70,7 +70,7 @@ public class CategoryController {
             return categoryService.createCategory(category);
         }
         catch (AdministrativeProcessException administrativeProcessException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 
