@@ -112,7 +112,7 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @GetMapping("/{categoryId})")
+    @GetMapping("/{categoryId}/administrative-process")
     public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId, @RequestParam(required = false) Integer minAge,
                                                                             @RequestParam(required = false) Integer maxAge,
                                                                             @RequestParam(required = false) List<String> nationalities,
