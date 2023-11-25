@@ -3,6 +3,7 @@ package com.stud.studadvice.service;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
+import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.categories.CategoryRepository;
 
@@ -13,6 +14,7 @@ import com.stud.studadvice.model.administrative.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
