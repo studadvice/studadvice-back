@@ -3,6 +3,7 @@ package com.stud.studadvice.service;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
+import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.categories.CategoryRepository;
 
@@ -11,10 +12,13 @@ import org.bson.types.ObjectId;
 import com.stud.studadvice.model.administrative.Category;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -69,8 +73,25 @@ public class CategoryService {
     }
 
     public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(ObjectId categoryId, Integer minAge, Integer maxAge, List<String> nationalities, List<String> universities, Pageable pageable) throws CategoryException {
-        // TODO
-        return null;
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException("Category not found"));
+
+        List<AdministrativeProcess> administrativeProcesses = category.getAdministrativeProcesses();
+
+        List<AdministrativeProcess> filteredAdministrativeProcesses = administrativeProcesses.stream()
+                .filter(process -> (minAge == null || process.getMinAge() >= minAge)
+                        && (maxAge == null || process.getMaxAge() <= maxAge)
+                        && (nationalities == null || nationalities.isEmpty() || new HashSet<>(process.getNationalities()).containsAll(nationalities))
+                        && (universities == null || universities.isEmpty() || new HashSet<>(process.getUniversities()).containsAll(universities)))
+                .toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredAdministrativeProcesses.size());
+        List<AdministrativeProcess> paginatedProcesses = filteredAdministrativeProcesses.subList(start, end);
+
+        long totalCount = filteredAdministrativeProcesses.size();
+
+        return new PageImpl<>(paginatedProcesses, pageable, totalCount);
     }
 
     public Category addAdministrativeProcessToAnExistingCategory(ObjectId categoryId, ObjectId administrativeProcessId) throws CategoryException, AdministrativeProcessException {
