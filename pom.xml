@@ -14,6 +14,10 @@
 	<name>studadvice</name>
 	<description>studadvice</description>
 	<properties>
+		<!-- Sonar CI/CD -->
+		<sonar.organization>studadvice</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
