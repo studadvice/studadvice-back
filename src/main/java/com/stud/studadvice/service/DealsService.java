@@ -74,7 +74,7 @@ public class DealsService {
 
         query.with(pageable);
 
-        long total = mongoTemplate.count(query, AdministrativeProcess.class);
+        long total = mongoTemplate.count(query, Deal.class);
 
         List<Deal> processes = mongoTemplate.find(query, Deal.class);
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,13 +87,17 @@ public class CategoryService {
                         && (education == null || new HashSet<>(process.getEducations()).contains(education)))
                 .collect(Collectors.toList());
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), filteredAdministrativeProcesses.size());
-        List<AdministrativeProcess> paginatedProcesses = filteredAdministrativeProcesses.subList(start, end);
+        if (pageable.isPaged()) {
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), filteredAdministrativeProcesses.size());
+            List<AdministrativeProcess> paginatedProcesses = filteredAdministrativeProcesses.subList(start, end);
 
-        long totalCount = filteredAdministrativeProcesses.size();
+            long totalCount = filteredAdministrativeProcesses.size();
 
-        return new PageImpl<>(paginatedProcesses, pageable, totalCount);
+            return new PageImpl<>(paginatedProcesses, pageable, totalCount);
+        } else {
+            return new PageImpl<>(filteredAdministrativeProcesses, pageable, filteredAdministrativeProcesses.size());
+        }
     }
 
     public Category addAdministrativeProcessToAnExistingCategory(ObjectId categoryId, ObjectId administrativeProcessId) throws CategoryException, AdministrativeProcessException {
@@ -103,7 +108,14 @@ public class CategoryService {
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
 
         List<AdministrativeProcess> administrativeProcesses = existingCategory.getAdministrativeProcesses();
-        administrativeProcesses.add(existingAdministrativeProcess);
+
+        if (administrativeProcesses != null) {
+            administrativeProcesses.add(existingAdministrativeProcess);
+        }
+        else{
+            administrativeProcesses = new ArrayList<>();
+            administrativeProcesses.add(existingAdministrativeProcess);
+        }
 
         existingCategory.setAdministrativeProcesses(administrativeProcesses);
 
