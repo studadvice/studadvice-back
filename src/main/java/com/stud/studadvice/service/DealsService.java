@@ -1,10 +1,11 @@
 package com.stud.studadvice.service;
 
 import com.stud.studadvice.exception.DealException;
-import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.repository.deals.DealsRepository;
+
 import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

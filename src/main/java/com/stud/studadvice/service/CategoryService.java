@@ -40,8 +40,9 @@ public class CategoryService {
     public Category createCategory(Category category) throws AdministrativeProcessException {
         if (category.getAdministrativeProcesses() != null) {
             for (AdministrativeProcess administrativeProcess : category.getAdministrativeProcesses()) {
-                administrativeProcessRepository.findById(administrativeProcess.getId())
-                        .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
+                if (administrativeProcessRepository.findById(administrativeProcess.getId()).isEmpty()) {
+                    throw new AdministrativeProcessException("Administrative process not found");
+                }
             }
         }
         return categoryRepository.save(category);
@@ -53,8 +54,9 @@ public class CategoryService {
 
         if (categoryUpdated.getAdministrativeProcesses() != null) {
             for (AdministrativeProcess administrativeProcess : categoryUpdated.getAdministrativeProcesses()) {
-                administrativeProcessRepository.findById(administrativeProcess.getId())
-                        .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
+                if (administrativeProcessRepository.findById(administrativeProcess.getId()).isEmpty()) {
+                        throw new AdministrativeProcessException("Administrative process not found");
+                }
             }
         }
 

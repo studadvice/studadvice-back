@@ -39,8 +39,9 @@ public class AdministrativeProcessService {
             for (Step step : administrativeProcess.getSteps()) {
                 if(step.getRequiredDocuments()!= null) {
                     for (RequiredDocument requiredDocument : step.getRequiredDocuments()) {
-                        requiredDocumentRepository.findById(requiredDocument.getId())
-                                .orElseThrow(() -> new AdministrativeProcessException("Administrative process use a undefined required document. Please create it first"));
+                        if (requiredDocumentRepository.findById(requiredDocument.getId()).isEmpty()) {
+                            throw new AdministrativeProcessException("Administrative process use a undefined required document. Please create it first");
+                        }
                     }
                 }
             }
@@ -57,8 +58,9 @@ public class AdministrativeProcessService {
             for (Step step : updatedProcess.getSteps()) {
                 if(step.getRequiredDocuments()!= null) {
                     for (RequiredDocument requiredDocument : step.getRequiredDocuments()) {
-                        requiredDocumentRepository.findById(requiredDocument.getId())
-                                .orElseThrow(() -> new AdministrativeProcessException("Administrative process use a undefined required document. Please create it first"));
+                        if (requiredDocumentRepository.findById(requiredDocument.getId()).isEmpty()) {
+                            throw new AdministrativeProcessException("Administrative process use a undefined required document. Please create it first");
+                        }
                     }
                 }
             }
