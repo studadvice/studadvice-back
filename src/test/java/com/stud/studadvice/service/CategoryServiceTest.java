@@ -149,7 +149,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void deleteCategoryById_WhenCategoryExists_ShouldDeleteCategory() throws CategoryException {
+    void deleteCategoryById_WhenCategoryExists_ShouldDeleteCategory() {
         // Given
         ObjectId categoryId = new ObjectId("6035c09333d5390c6a618f4a");
         Category existingCategory = new Category();
@@ -160,7 +160,7 @@ public class CategoryServiceTest {
         assertDoesNotThrow(() -> categoryService.deleteCategoryById(categoryId));
 
         // Then: No exception should be thrown, and the delete method should be called
-        verify(categoryRepository).deleteById(categoryId);
+        verify(categoryRepository).delete(existingCategory);
     }
 
     @Test
