@@ -68,10 +68,10 @@ public class CategoryService {
     }
 
     public void deleteCategoryById(ObjectId categoryId) throws CategoryException {
-        categoryRepository.findById(categoryId)
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException("Category not found"));
 
-        categoryRepository.deleteById(categoryId);
+        categoryRepository.delete(category);
     }
 
     public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(ObjectId categoryId, Integer age, String nationality, String university, String education, Pageable pageable) throws CategoryException {
