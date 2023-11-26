@@ -2,13 +2,16 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.RequiredDocumentException;
 import com.stud.studadvice.model.administrative.RequiredDocument;
-import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.service.RequiredDocumentService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import jakarta.validation.Valid;
+
 import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
