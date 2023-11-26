@@ -2,9 +2,12 @@ package com.stud.studadvice.model.deal;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import jakarta.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
+
 import org.bson.types.ObjectId;
 
 import org.springframework.data.annotation.Id;
