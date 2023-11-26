@@ -1,6 +1,14 @@
-## Studadvice-back
+<h1 align="center">Stud'Advice Backend</h1>
 
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=studadvice_studadvice-back)
+<div align="center">
+
+<img src="docs/studadvice.png" height="120" alt="Stud'Advice Logo">
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=studadvice_studadvice-back&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=studadvice_studadvice-back)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=studadvice_studadvice-back&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=studadvice_studadvice-back)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=studadvice_studadvice-back&metric=coverage)](https://sonarcloud.io/summary/new_code?id=studadvice_studadvice-back)
+
+</div>
 
 ## Membres
 - Churchill Atchedji
