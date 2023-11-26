@@ -160,7 +160,7 @@ public class RequiredDocumentServiceTest {
         assertDoesNotThrow(() -> requiredDocumentService.deleteRequiredDocument(documentId));
 
         // Then: No exception should be thrown
-        verify(requiredDocumentRepository).deleteById(documentId);
+        verify(requiredDocumentRepository).delete(existingDocument);
     }
 
     @Test
