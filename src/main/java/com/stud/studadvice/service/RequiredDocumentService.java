@@ -53,10 +53,10 @@ public class RequiredDocumentService {
     }
 
     public void deleteRequiredDocument(ObjectId id) throws RequiredDocumentException {
-        requiredDocumentRepository.findById(id)
+        RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
                 .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
 
-        requiredDocumentRepository.deleteById(id);
+        requiredDocumentRepository.delete(requiredDocument);
     }
 
     public Page<RequiredDocument> searchRequiredDocuments(String searchText, Pageable pageable) {
