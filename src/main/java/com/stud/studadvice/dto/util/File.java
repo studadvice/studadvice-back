@@ -1,4 +1,4 @@
-package com.stud.studadvice.entity;
+package com.stud.studadvice.dto.util;
 
 import lombok.Getter;
 import lombok.Setter;
