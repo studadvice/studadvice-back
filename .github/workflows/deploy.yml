@@ -1,0 +1,26 @@
+name: Deploy to Azure VPS
+
+on:
+  workflow_run:
+    workflows: [ "Studadvice Maven CI" ]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: SSH and Deploy on VPS
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            echo ${{ secrets.PASSWORD }} | sudo -S docker pull ghcr.io/${{ github.repository_owner }}/studadvice:latest
+            echo ${{ secrets.PASSWORD }} | sudo -S docker stack deploy --compose-file docker-compose.yml back_dev
