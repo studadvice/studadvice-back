@@ -1,6 +1,7 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.AdministrativeProcessException;
+import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.service.AdministrativeProcessService;
 
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import jakarta.validation.Valid;
+
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -47,13 +51,14 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "201", description = "Administrative process created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
-    @PostMapping
+
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcess createAdministrativeProcess(@Valid @RequestBody AdministrativeProcess administrativeProcess) {
+    public AdministrativeProcess createAdministrativeProcess(@Valid @RequestPart("administrativeProcess") AdministrativeProcess administrativeProcess, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return administrativeProcessService.createAdministrativeProcess(administrativeProcess);
+            return administrativeProcessService.createAdministrativeProcess(administrativeProcess,imageFile);
         }
-        catch (AdministrativeProcessException administrativeProcessException){
+        catch (AdministrativeProcessException | ImageException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
@@ -65,11 +70,11 @@ public class AdministrativeProcessController {
     })
     @PutMapping("/{administrativeProcessId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestBody AdministrativeProcess updatedProcess) {
+    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestBody AdministrativeProcess updatedProcess,@RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess);
+            return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess,imageFile);
         }
-        catch (AdministrativeProcessException administrativeProcessException){
+        catch (AdministrativeProcessException | ImageException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
