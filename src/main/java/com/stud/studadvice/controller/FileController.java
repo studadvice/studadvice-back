@@ -1,6 +1,6 @@
 package com.stud.studadvice.controller;
 
-import com.stud.studadvice.entity.File;
+import com.stud.studadvice.dto.util.File;
 import com.stud.studadvice.service.FileService;
 
 import org.springframework.beans.factory.annotation.Autowired;
