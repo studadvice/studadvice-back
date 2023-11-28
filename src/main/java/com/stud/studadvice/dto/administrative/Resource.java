@@ -1,7 +1,6 @@
-package com.stud.studadvice.entity.administrative;
+package com.stud.studadvice.dto.administrative;
 
 import jakarta.validation.constraints.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
 
