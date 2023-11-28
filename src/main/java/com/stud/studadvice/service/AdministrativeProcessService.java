@@ -1,12 +1,16 @@
 package com.stud.studadvice.service;
 
+import com.mongodb.client.gridfs.model.GridFSUploadOptions;
+
 import com.stud.studadvice.exception.AdministrativeProcessException;
+import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.model.administrative.RequiredDocument;
 import com.stud.studadvice.model.administrative.Step;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,27 +18,33 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.*;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AdministrativeProcessService {
     @Autowired
     private MongoTemplate mongoTemplate;
-
     @Autowired
     private RequiredDocumentRepository requiredDocumentRepository;
-
     @Autowired
     private AdministrativeProcessRepository administrativeProcessRepository;
+    @Autowired
+    private GridFsTemplate gridFsTemplate;
+
     public AdministrativeProcess getAdministrativeProcessById(ObjectId administrativeProcessId) throws AdministrativeProcessException {
         return administrativeProcessRepository.findById(administrativeProcessId)
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
     }
 
-    public AdministrativeProcess createAdministrativeProcess(AdministrativeProcess administrativeProcess) throws AdministrativeProcessException {
+    public AdministrativeProcess createAdministrativeProcess(AdministrativeProcess administrativeProcess, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
         if(administrativeProcess.getSteps()!= null) {
             for (Step step : administrativeProcess.getSteps()) {
                 if(step.getRequiredDocuments()!= null) {
@@ -46,10 +56,19 @@ public class AdministrativeProcessService {
                 }
             }
         }
-        return administrativeProcessRepository.save(administrativeProcess);
+
+        try{
+            String imageId = storeImage(imageFile);
+            administrativeProcess.setImageId(imageId);
+            return administrativeProcessRepository.save(administrativeProcess);
+
+        }
+        catch (IOException ioException){
+            throw new ImageException("Error when storing the image");
+        }
     }
 
-    public AdministrativeProcess updateAdministrativeProcess(ObjectId administrativeProcessId, AdministrativeProcess updatedProcess) throws AdministrativeProcessException {
+    public AdministrativeProcess updateAdministrativeProcess(ObjectId administrativeProcessId, AdministrativeProcess updatedProcess,MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
 
         AdministrativeProcess existingProcess = administrativeProcessRepository.findById(administrativeProcessId)
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
@@ -66,7 +85,6 @@ public class AdministrativeProcessService {
             }
         }
 
-        existingProcess.setImage(updatedProcess.getImage());
         existingProcess.setDescription(updatedProcess.getDescription());
         existingProcess.setMaxAge(updatedProcess.getMaxAge());
         existingProcess.setMinAge(updatedProcess.getMinAge());
@@ -75,7 +93,14 @@ public class AdministrativeProcessService {
         existingProcess.setSteps(updatedProcess.getSteps());
         existingProcess.setName(updatedProcess.getName());
 
-        return administrativeProcessRepository.save(existingProcess);
+        try{
+            String imageId = storeImage(imageFile);
+            existingProcess.setImageId(imageId);
+            return administrativeProcessRepository.save(existingProcess);
+        }
+        catch (IOException ioException){
+            throw new ImageException("Error when storing the image");
+        }
     }
 
     public void deleteAdministrativeProcess(ObjectId administrativeProcessId) throws AdministrativeProcessException {
@@ -129,5 +154,12 @@ public class AdministrativeProcessService {
         List<AdministrativeProcess> processes = mongoTemplate.find(query, AdministrativeProcess.class);
 
         return PageableExecutionUtils.getPage(processes, pageable, () -> total);
+    }
+
+    public String storeImage(MultipartFile imageFile) throws IOException {
+        GridFSUploadOptions options = new GridFSUploadOptions()
+                .metadata(new Document("contentType", imageFile.getContentType())
+                        .append("contentSize", imageFile.getSize()));
+        return gridFsTemplate.store(imageFile.getInputStream(), Objects.requireNonNull(imageFile.getOriginalFilename()),options).toString();
     }
 }

@@ -32,8 +32,7 @@ public class AdministrativeProcess {
     @NotNull(message = "Please, give a description for your administrative process")
     @TextIndexed
     private String description;
-    @NotNull(message = "Please, give an image for your administrative process")
-    private String image;
+    private String imageId;
     private List<String> educations;
     private Integer minAge;
     private Integer maxAge;
