@@ -1,12 +1,15 @@
 package com.stud.studadvice.service;
 
+import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
+import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.categories.CategoryRepository;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import com.stud.studadvice.model.administrative.Category;
@@ -14,17 +17,22 @@ import com.stud.studadvice.model.administrative.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
+    @Autowired
+    private GridFsTemplate gridFsTemplate;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -39,7 +47,7 @@ public class CategoryService {
                 .orElseThrow(() -> new CategoryException("Category not found"));
     }
 
-    public Category createCategory(Category category) throws AdministrativeProcessException {
+    public Category createCategory(Category category, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
         if (category.getAdministrativeProcesses() != null) {
             for (AdministrativeProcess administrativeProcess : category.getAdministrativeProcesses()) {
                 if (administrativeProcessRepository.findById(administrativeProcess.getId()).isEmpty()) {
@@ -47,10 +55,18 @@ public class CategoryService {
                 }
             }
         }
-        return categoryRepository.save(category);
+
+        try{
+            String imageId = storeImage(imageFile);
+            category.setImageId(imageId);
+            return categoryRepository.save(category);
+        }
+        catch (IOException ioException){
+            throw new ImageException("Error when storing the image");
+        }
     }
 
-    public Category updateCategoryById(ObjectId categoryId, Category categoryUpdated) throws CategoryException,AdministrativeProcessException {
+    public Category updateCategoryById(ObjectId categoryId, Category categoryUpdated, MultipartFile imageFile) throws CategoryException, AdministrativeProcessException, ImageException {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException("Category not found"));
 
@@ -64,10 +80,16 @@ public class CategoryService {
 
         existingCategory.setDescription(categoryUpdated.getDescription());
         existingCategory.setName(categoryUpdated.getName());
-        existingCategory.setImage(categoryUpdated.getImage());
         existingCategory.setAdministrativeProcesses(categoryUpdated.getAdministrativeProcesses());
 
-        return categoryRepository.save(existingCategory);
+        try{
+            String imageId = storeImage(imageFile);
+            existingCategory.setImageId(imageId);
+            return categoryRepository.save(existingCategory);
+        }
+        catch (IOException ioException){
+            throw new ImageException("Error when storing the image");
+        }
 
     }
 
@@ -124,6 +146,12 @@ public class CategoryService {
         existingCategory.setAdministrativeProcesses(administrativeProcesses);
 
         return categoryRepository.save(existingCategory);
+    }
+    public String storeImage(MultipartFile imageFile) throws IOException {
+        GridFSUploadOptions options = new GridFSUploadOptions()
+                .metadata(new Document("contentType", imageFile.getContentType())
+                        .append("contentSize", imageFile.getSize()));
+        return gridFsTemplate.store(imageFile.getInputStream(), Objects.requireNonNull(imageFile.getOriginalFilename()),options).toString();
     }
 
 }

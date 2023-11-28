@@ -25,7 +25,7 @@ public class RequiredDocument {
     @TextIndexed
     @NotNull(message = "Please, give a description for your required document")
     private String description;
-    private String image;
+    private String imageId;
     private String url;
     public RequiredDocument() {
     }

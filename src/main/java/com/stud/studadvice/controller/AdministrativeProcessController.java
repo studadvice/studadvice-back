@@ -68,9 +68,9 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative process updated successfully"),
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
-    @PutMapping("/{administrativeProcessId}")
+    @PutMapping(value = "/{administrativeProcessId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestBody AdministrativeProcess updatedProcess,@RequestParam("imageFile") MultipartFile imageFile) {
+    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestPart AdministrativeProcess updatedProcess,@RequestParam("imageFile") MultipartFile imageFile) {
         try {
             return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess,imageFile);
         }
