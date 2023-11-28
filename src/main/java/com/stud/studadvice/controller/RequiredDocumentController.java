@@ -42,9 +42,9 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "404", description = "Required document process not found"),
     })
     @GetMapping("/{requiredDocumentId}")
-    public RequiredDocument getRequiredDocumentById(@PathVariable String requiredDocumentId) {
+    public RequiredDocument getRequiredDocumentById(@PathVariable ObjectId requiredDocumentId) {
         try {
-            return requiredDocumentService.getRequiredDocumentById(new ObjectId(requiredDocumentId));
+            return requiredDocumentService.getRequiredDocumentById(requiredDocumentId);
         } catch (RequiredDocumentException requiredDocumentException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
         }
