@@ -2,8 +2,8 @@ package com.stud.studadvice.service;
 
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.exception.AdministrativeProcessException;
-import com.stud.studadvice.entity.administrative.AdministrativeProcess;
-import com.stud.studadvice.entity.administrative.Category;
+import com.stud.studadvice.entity.AdministrativeProcess;
+import com.stud.studadvice.entity.Category;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.categories.CategoryRepository;
 

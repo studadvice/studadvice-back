@@ -3,7 +3,7 @@ package com.stud.studadvice.service;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.entity.deal.Deal;
+import com.stud.studadvice.entity.Deal;
 import com.stud.studadvice.repository.deals.DealsRepository;
 
 import org.bson.Document;

@@ -1,4 +1,4 @@
-package com.stud.studadvice.dto.administrative;
+package com.stud.studadvice.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Category {
+public class CategoryDto {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     @NotNull(message = "Please, give a name for your category")
@@ -20,7 +20,7 @@ public class Category {
     private String description;
     private String imageId;
     private List<AdministrativeProcessDto> administrativeProcesses;
-    public Category() {
+    public CategoryDto() {
     }
 
 }

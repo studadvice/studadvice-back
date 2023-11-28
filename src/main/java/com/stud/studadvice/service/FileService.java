@@ -3,7 +3,7 @@ package com.stud.studadvice.service;
 import com.mongodb.client.gridfs.model.GridFSFile;
 
 
-import com.stud.studadvice.dto.util.File;
+import com.stud.studadvice.dto.FileDto;
 import org.apache.commons.io.IOUtils;
 
 import org.bson.Document;
@@ -23,11 +23,11 @@ public class FileService {
 
     @Autowired
     private GridFsTemplate template;
-    public File download(String id) throws IOException {
+    public FileDto download(String id) throws IOException {
 
         GridFSFile gridFSFile = template.findOne(new Query(Criteria.where("_id").is(id)));
 
-        File loadFile = new File();
+        FileDto loadFile = new FileDto();
 
         if (gridFSFile != null && gridFSFile.getMetadata() != null) {
             loadFile.setFilename(gridFSFile.getFilename());
@@ -50,7 +50,7 @@ public class FileService {
         return loadFile;
     }
 
-    public boolean checkFile(File file){
+    public boolean checkFile(FileDto file){
         return file.getFile()!=null && file.getFileType() != null && file.getFilename() != null;
     }
 }

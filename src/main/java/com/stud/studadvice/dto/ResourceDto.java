@@ -1,4 +1,4 @@
-package com.stud.studadvice.dto.administrative;
+package com.stud.studadvice.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Resource {
+public class ResourceDto {
     @NotNull(message = "Please, give a name for your resource")
     private String name;
     private String url;
@@ -14,6 +14,6 @@ public class Resource {
     @NotNull(message = "Please, give a description for your resource")
     private String description;
 
-    public Resource() {
+    public ResourceDto() {
     }
 }

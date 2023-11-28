@@ -3,7 +3,7 @@ package com.stud.studadvice.service;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.exception.RequiredDocumentException;
-import com.stud.studadvice.entity.administrative.RequiredDocument;
+import com.stud.studadvice.entity.RequiredDocument;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
 import org.bson.Document;

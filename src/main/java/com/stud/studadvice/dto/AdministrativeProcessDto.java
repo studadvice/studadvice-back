@@ -1,4 +1,4 @@
-package com.stud.studadvice.dto.administrative;
+package com.stud.studadvice.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -24,7 +24,7 @@ public class AdministrativeProcessDto {
     private Integer maxAge;
     private List<String> nationalities;
     private List<String> universities;
-    private List<Step> steps;
+    private List<StepDto> steps;
 
     public AdministrativeProcessDto() {
     }

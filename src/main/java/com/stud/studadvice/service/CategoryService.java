@@ -4,16 +4,14 @@ import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.entity.administrative.AdministrativeProcess;
-import com.stud.studadvice.model.administrative.AdministrativeProcess;
-import com.stud.studadvice.model.deal.Deal;
+import com.stud.studadvice.entity.AdministrativeProcess;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.categories.CategoryRepository;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import com.stud.studadvice.entity.administrative.Category;
+import com.stud.studadvice.entity.Category;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
