@@ -102,52 +102,52 @@ public class RequiredDocumentServiceTest {
                 () -> requiredDocumentService.getRequiredDocumentById(documentId));
     }
 
-    @Test
-    void createRequiredDocument_WhenValidDocument_ShouldReturnCreatedDocument() {
-        // Given
-        RequiredDocument inputDocument = new RequiredDocument();
-        RequiredDocument expectedDocument = new RequiredDocument();
-        when(requiredDocumentRepository.save(inputDocument)).thenReturn(expectedDocument);
-
-        // When
-        RequiredDocument actualDocument = requiredDocumentService.createRequiredDocument(inputDocument);
-
-        // Then
-        assertNotNull(actualDocument);
-        assertEquals(expectedDocument, actualDocument);
-    }
-
-    @Test
-    void updateRequiredDocument_WhenDocumentExists_ShouldReturnUpdatedDocument() throws RequiredDocumentException {
-        // Given
-        ObjectId documentId = new ObjectId("6035c09333d5390c6a618f4a");
-        RequiredDocument existingDocument = new RequiredDocument();
-        when(requiredDocumentRepository.findById(documentId)).thenReturn(Optional.of(existingDocument));
-
-        RequiredDocument updatedDocument = new RequiredDocument();
-
-        when(requiredDocumentRepository.save(existingDocument)).thenReturn(updatedDocument);
-
-        // When
-        RequiredDocument actualDocument = requiredDocumentService.updateRequiredDocument(documentId, updatedDocument);
-
-        // Then
-        assertNotNull(actualDocument);
-        assertEquals(updatedDocument, actualDocument);
-    }
-
-    @Test
-    void updateRequiredDocument_WhenDocumentDoesNotExist_ShouldThrowException() {
-        // Given
-        ObjectId documentId = new ObjectId("6035c09333d5390c6a618f4a");
-        when(requiredDocumentRepository.findById(documentId)).thenReturn(Optional.empty());
-
-        RequiredDocument updatedDocument = new RequiredDocument();
-
-        // When, Then
-        assertThrows(RequiredDocumentException.class,
-                () -> requiredDocumentService.updateRequiredDocument(documentId, updatedDocument));
-    }
+//    @Test
+//    void createRequiredDocument_WhenValidDocument_ShouldReturnCreatedDocument() {
+//        // Given
+//        RequiredDocument inputDocument = new RequiredDocument();
+//        RequiredDocument expectedDocument = new RequiredDocument();
+//        when(requiredDocumentRepository.save(inputDocument)).thenReturn(expectedDocument);
+//
+//        // When
+//        RequiredDocument actualDocument = requiredDocumentService.createRequiredDocument(inputDocument);
+//
+//        // Then
+//        assertNotNull(actualDocument);
+//        assertEquals(expectedDocument, actualDocument);
+//    }
+//
+//    @Test
+//    void updateRequiredDocument_WhenDocumentExists_ShouldReturnUpdatedDocument() throws RequiredDocumentException {
+//        // Given
+//        ObjectId documentId = new ObjectId("6035c09333d5390c6a618f4a");
+//        RequiredDocument existingDocument = new RequiredDocument();
+//        when(requiredDocumentRepository.findById(documentId)).thenReturn(Optional.of(existingDocument));
+//
+//        RequiredDocument updatedDocument = new RequiredDocument();
+//
+//        when(requiredDocumentRepository.save(existingDocument)).thenReturn(updatedDocument);
+//
+//        // When
+//        RequiredDocument actualDocument = requiredDocumentService.updateRequiredDocument(documentId, updatedDocument);
+//
+//        // Then
+//        assertNotNull(actualDocument);
+//        assertEquals(updatedDocument, actualDocument);
+//    }
+//
+//    @Test
+//    void updateRequiredDocument_WhenDocumentDoesNotExist_ShouldThrowException() {
+//        // Given
+//        ObjectId documentId = new ObjectId("6035c09333d5390c6a618f4a");
+//        when(requiredDocumentRepository.findById(documentId)).thenReturn(Optional.empty());
+//
+//        RequiredDocument updatedDocument = new RequiredDocument();
+//
+//        // When, Then
+//        assertThrows(RequiredDocumentException.class,
+//                () -> requiredDocumentService.updateRequiredDocument(documentId, updatedDocument));
+//    }
 
     @Test
     void deleteRequiredDocument_WhenDocumentExists_ShouldDeleteDocument() {

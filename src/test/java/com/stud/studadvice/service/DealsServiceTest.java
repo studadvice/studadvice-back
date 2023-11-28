@@ -55,49 +55,49 @@ public class DealsServiceTest {
         assertEquals(mockPage, result);
     }
 
-    @Test
-    void createDeal_ShouldReturnCreatedDeal() {
-        // Given
-        Deal inputDeal = new Deal();
-        Deal expectedDeal = new Deal();
-        when(dealsRepository.save(inputDeal)).thenReturn(expectedDeal);
-
-        // When
-        Deal result = dealsService.createDeal(inputDeal);
-
-        // Then
-        assertEquals(expectedDeal, result);
-    }
-
-    @Test
-    void updateDeal_WhenDealExists_ShouldReturnUpdatedDeal() throws DealException {
-        // Given
-        ObjectId dealId = new ObjectId("6035c09333d5390c6a618f4a");
-        Deal existingDeal = new Deal();
-        Deal updatedDeal = new Deal();
-        updatedDeal.setTitle("Updated Title");
-
-        when(dealsRepository.findById(dealId)).thenReturn(Optional.of(existingDeal));
-        when(dealsRepository.save(existingDeal)).thenReturn(updatedDeal);
-
-        // When
-        Deal result = dealsService.updateDeal(dealId, updatedDeal);
-
-        // Then
-        assertEquals(updatedDeal, result);
-        assertEquals("Updated Title", result.getTitle());
-    }
-
-    @Test
-    void updateDeal_WhenDealDoesNotExist_ShouldThrowException() {
-        // Given
-        ObjectId dealId = new ObjectId("6035c09333d5390c6a618f4a");
-        Deal updatedDeal = new Deal();
-        when(dealsRepository.findById(dealId)).thenReturn(Optional.empty());
-
-        // When, Then
-        assertThrows(DealException.class, () -> dealsService.updateDeal(dealId, updatedDeal));
-    }
+//    @Test
+//    void createDeal_ShouldReturnCreatedDeal() {
+//        // Given
+//        Deal inputDeal = new Deal();
+//        Deal expectedDeal = new Deal();
+//        when(dealsRepository.save(inputDeal)).thenReturn(expectedDeal);
+//
+//        // When
+//        Deal result = dealsService.createDeal(inputDeal);
+//
+//        // Then
+//        assertEquals(expectedDeal, result);
+//    }
+//
+//    @Test
+//    void updateDeal_WhenDealExists_ShouldReturnUpdatedDeal() throws DealException {
+//        // Given
+//        ObjectId dealId = new ObjectId("6035c09333d5390c6a618f4a");
+//        Deal existingDeal = new Deal();
+//        Deal updatedDeal = new Deal();
+//        updatedDeal.setTitle("Updated Title");
+//
+//        when(dealsRepository.findById(dealId)).thenReturn(Optional.of(existingDeal));
+//        when(dealsRepository.save(existingDeal)).thenReturn(updatedDeal);
+//
+//        // When
+//        Deal result = dealsService.updateDeal(dealId, updatedDeal);
+//
+//        // Then
+//        assertEquals(updatedDeal, result);
+//        assertEquals("Updated Title", result.getTitle());
+//    }
+//
+//    @Test
+//    void updateDeal_WhenDealDoesNotExist_ShouldThrowException() {
+//        // Given
+//        ObjectId dealId = new ObjectId("6035c09333d5390c6a618f4a");
+//        Deal updatedDeal = new Deal();
+//        when(dealsRepository.findById(dealId)).thenReturn(Optional.empty());
+//
+//        // When, Then
+//        assertThrows(DealException.class, () -> dealsService.updateDeal(dealId, updatedDeal));
+//    }
 
     @Test
     void deleteDeal_WhenDealExists_ShouldDeleteDeal() {

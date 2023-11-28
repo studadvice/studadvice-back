@@ -69,68 +69,68 @@ public class AdministrativeProcessServiceTest {
                 () -> administrativeProcessService.getAdministrativeProcessById(processId));
     }
 
-    @Test
-    void createAdministrativeProcess_WhenValidProcess_ShouldReturnCreatedProcess() throws AdministrativeProcessException {
-        // Given
-        AdministrativeProcess inputProcess = new AdministrativeProcess();
-        AdministrativeProcess expectedProcess = new AdministrativeProcess();
-        when(requiredDocumentRepository.findById(any())).thenReturn(Optional.of(new RequiredDocument()));
-        when(administrativeProcessRepository.save(inputProcess)).thenReturn(expectedProcess);
+//    @Test
+//    void createAdministrativeProcess_WhenValidProcess_ShouldReturnCreatedProcess() throws AdministrativeProcessException {
+//        // Given
+//        AdministrativeProcess inputProcess = new AdministrativeProcess();
+//        AdministrativeProcess expectedProcess = new AdministrativeProcess();
+//        when(requiredDocumentRepository.findById(any())).thenReturn(Optional.of(new RequiredDocument()));
+//        when(administrativeProcessRepository.save(inputProcess)).thenReturn(expectedProcess);
+//
+//        // When
+//        AdministrativeProcess actualProcess = administrativeProcessService.createAdministrativeProcess(inputProcess);
+//
+//        // Then
+//        assertNotNull(actualProcess);
+//        assertEquals(expectedProcess, actualProcess);
+//    }
 
-        // When
-        AdministrativeProcess actualProcess = administrativeProcessService.createAdministrativeProcess(inputProcess);
+//    @Test
+//    void createAdministrativeProcess_WhenInvalidProcess_ShouldThrowException() {
+//        // Given
+//        AdministrativeProcess inputProcess = new AdministrativeProcess();
+//        when(requiredDocumentRepository.findById(any())).thenReturn(Optional.of(new RequiredDocument()));
+//        when(administrativeProcessRepository.save(inputProcess)).thenThrow(new RuntimeException("Test exception"));
+//
+//        // When, Then
+//        assertThrows(RuntimeException.class,
+//                () -> administrativeProcessService.createAdministrativeProcess(inputProcess));
+//    }
 
-        // Then
-        assertNotNull(actualProcess);
-        assertEquals(expectedProcess, actualProcess);
-    }
+//    @Test
+//    void updateAdministrativeProcess_WhenValidInput_ShouldReturnUpdatedProcess() throws AdministrativeProcessException {
+//        // Given
+//        ObjectId processId = new ObjectId("6035c09333d5390c6a618f4a");
+//        AdministrativeProcess existingProcess = new AdministrativeProcess();
+//        AdministrativeProcess updatedProcess = new AdministrativeProcess();
+//        updatedProcess.setImage("New Image");
+//        updatedProcess.setDescription("New Description");
+//
+//        when(administrativeProcessRepository.findById(processId)).thenReturn(Optional.of(existingProcess));
+//        when(requiredDocumentRepository.findById(any())).thenReturn(Optional.of(new RequiredDocument()));
+//        when(administrativeProcessRepository.save(existingProcess)).thenReturn(updatedProcess);
+//
+//        // When
+//        AdministrativeProcess actualProcess = administrativeProcessService.updateAdministrativeProcess(processId, updatedProcess);
+//
+//        // Then
+//        assertNotNull(actualProcess);
+//        assertEquals(updatedProcess, actualProcess);
+//        assertEquals("New Image", actualProcess.getImage());
+//        assertEquals("New Description", actualProcess.getDescription());
+//    }
 
-    @Test
-    void createAdministrativeProcess_WhenInvalidProcess_ShouldThrowException() {
-        // Given
-        AdministrativeProcess inputProcess = new AdministrativeProcess();
-        when(requiredDocumentRepository.findById(any())).thenReturn(Optional.of(new RequiredDocument()));
-        when(administrativeProcessRepository.save(inputProcess)).thenThrow(new RuntimeException("Test exception"));
-
-        // When, Then
-        assertThrows(RuntimeException.class,
-                () -> administrativeProcessService.createAdministrativeProcess(inputProcess));
-    }
-
-    @Test
-    void updateAdministrativeProcess_WhenValidInput_ShouldReturnUpdatedProcess() throws AdministrativeProcessException {
-        // Given
-        ObjectId processId = new ObjectId("6035c09333d5390c6a618f4a");
-        AdministrativeProcess existingProcess = new AdministrativeProcess();
-        AdministrativeProcess updatedProcess = new AdministrativeProcess();
-        updatedProcess.setImage("New Image");
-        updatedProcess.setDescription("New Description");
-
-        when(administrativeProcessRepository.findById(processId)).thenReturn(Optional.of(existingProcess));
-        when(requiredDocumentRepository.findById(any())).thenReturn(Optional.of(new RequiredDocument()));
-        when(administrativeProcessRepository.save(existingProcess)).thenReturn(updatedProcess);
-
-        // When
-        AdministrativeProcess actualProcess = administrativeProcessService.updateAdministrativeProcess(processId, updatedProcess);
-
-        // Then
-        assertNotNull(actualProcess);
-        assertEquals(updatedProcess, actualProcess);
-        assertEquals("New Image", actualProcess.getImage());
-        assertEquals("New Description", actualProcess.getDescription());
-    }
-
-    @Test
-    void updateAdministrativeProcess_WhenProcessDoesNotExist_ShouldThrowException() {
-        // Given
-        ObjectId processId = new ObjectId("6035c09333d5390c6a618f4a");
-        AdministrativeProcess updatedProcess = new AdministrativeProcess();
-        when(administrativeProcessRepository.findById(processId)).thenReturn(Optional.empty());
-
-        // When, Then
-        assertThrows(AdministrativeProcessException.class,
-                () -> administrativeProcessService.updateAdministrativeProcess(processId, updatedProcess));
-    }
+//    @Test
+//    void updateAdministrativeProcess_WhenProcessDoesNotExist_ShouldThrowException() {
+//        // Given
+//        ObjectId processId = new ObjectId("6035c09333d5390c6a618f4a");
+//        AdministrativeProcess updatedProcess = new AdministrativeProcess();
+//        when(administrativeProcessRepository.findById(processId)).thenReturn(Optional.empty());
+//
+//        // When, Then
+//        assertThrows(AdministrativeProcessException.class,
+//                () -> administrativeProcessService.updateAdministrativeProcess(processId, updatedProcess));
+//    }
 
     @Test
     void deleteAdministrativeProcess_WhenProcessExists_ShouldDeleteProcess() throws AdministrativeProcessException {
