@@ -2,7 +2,7 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.model.administrative.AdministrativeProcess;
+import com.stud.studadvice.entity.administrative.AdministrativeProcess;
 import com.stud.studadvice.service.AdministrativeProcessService;
 
 import io.swagger.v3.oas.annotations.Operation;

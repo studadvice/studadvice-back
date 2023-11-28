@@ -4,9 +4,9 @@ import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.model.administrative.AdministrativeProcess;
-import com.stud.studadvice.model.administrative.RequiredDocument;
-import com.stud.studadvice.model.administrative.Step;
+import com.stud.studadvice.entity.administrative.AdministrativeProcess;
+import com.stud.studadvice.entity.administrative.RequiredDocument;
+import com.stud.studadvice.entity.administrative.Step;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 

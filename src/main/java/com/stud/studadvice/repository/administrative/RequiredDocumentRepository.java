@@ -1,6 +1,6 @@
 package com.stud.studadvice.repository.administrative;
 
-import com.stud.studadvice.model.administrative.RequiredDocument;
+import com.stud.studadvice.entity.administrative.RequiredDocument;
 
 import org.bson.types.ObjectId;
 

@@ -1,4 +1,4 @@
-package com.stud.studadvice.model.administrative;
+package com.stud.studadvice.entity.administrative;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -10,27 +10,23 @@ import lombok.Setter;
 
 import org.bson.types.ObjectId;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
-
-import java.util.List;
 
 @Getter
 @Setter
 @Document
-public class Category {
-    @Id
+public class RequiredDocument {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
-    @NotNull(message = "Please, give a name for your category")
+    @TextIndexed
+    @NotNull(message = "Please, give a name for your required document")
     private String name;
-    @NotNull(message = "Please, give a description for your category")
+    @TextIndexed
+    @NotNull(message = "Please, give a description for your required document")
     private String description;
     private String imageId;
-    @DocumentReference
-    private List<AdministrativeProcess> administrativeProcesses;
-    public Category() {
+    private String url;
+    public RequiredDocument() {
     }
-
 }

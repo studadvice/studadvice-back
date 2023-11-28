@@ -1,6 +1,6 @@
 package com.stud.studadvice.repository.deals;
 
-import com.stud.studadvice.model.deal.Deal;
+import com.stud.studadvice.entity.deal.Deal;
 
 import org.bson.types.ObjectId;
 

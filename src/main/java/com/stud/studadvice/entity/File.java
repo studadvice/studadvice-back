@@ -1,4 +1,4 @@
-package com.stud.studadvice.model;
+package com.stud.studadvice.entity;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -2,7 +2,7 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.model.deal.Deal;
+import com.stud.studadvice.entity.deal.Deal;
 import com.stud.studadvice.service.DealsService;
 
 import io.swagger.v3.oas.annotations.Operation;

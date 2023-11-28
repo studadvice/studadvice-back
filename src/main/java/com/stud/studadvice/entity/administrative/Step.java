@@ -1,4 +1,4 @@
-package com.stud.studadvice.model.administrative;
+package com.stud.studadvice.entity.administrative;
 
 import jakarta.validation.constraints.NotNull;
 

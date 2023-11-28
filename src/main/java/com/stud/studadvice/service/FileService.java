@@ -2,7 +2,7 @@ package com.stud.studadvice.service;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
 
-import com.stud.studadvice.model.File;
+import com.stud.studadvice.entity.File;
 
 import org.apache.commons.io.IOUtils;
 

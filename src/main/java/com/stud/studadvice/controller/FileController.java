@@ -1,6 +1,6 @@
 package com.stud.studadvice.controller;
 
-import com.stud.studadvice.model.File;
+import com.stud.studadvice.entity.File;
 import com.stud.studadvice.service.FileService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,10 @@ public class FileController {
     @Autowired
     private FileService imageService;
 
-    @GetMapping("/download/{id}")
-    public ResponseEntity<ByteArrayResource> download(@PathVariable String id){
+    @GetMapping("/download/{imageId}")
+    public ResponseEntity<ByteArrayResource> download(@PathVariable String imageId){
         try {
-            File file = imageService.download(id);
+            File file = imageService.download(imageId);
             if (imageService.checkFile(file)) {
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(file.getFileType()))
