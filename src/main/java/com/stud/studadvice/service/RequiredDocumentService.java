@@ -1,6 +1,8 @@
 package com.stud.studadvice.service;
 
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
+
+import com.stud.studadvice.dto.RequiredDocumentDto;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.exception.RequiredDocumentException;
 import com.stud.studadvice.entity.RequiredDocument;
@@ -8,6 +10,8 @@ import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
+
+import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,7 @@ import java.util.Objects;
 
 @Service
 public class RequiredDocumentService {
+
     @Autowired
     private GridFsTemplate gridFsTemplate;
 
@@ -36,45 +41,53 @@ public class RequiredDocumentService {
     @Autowired
     private RequiredDocumentRepository requiredDocumentRepository;
 
-    public Page<RequiredDocument> getRequiredDocuments(Pageable pageable) {
-        return requiredDocumentRepository.findAll(pageable);
+    @Autowired
+    private ModelMapper modelMapper;  // Add ModelMapper bean in your configuration
+
+    public Page<RequiredDocumentDto> getRequiredDocuments(Pageable pageable) {
+        Page<RequiredDocument> requiredDocuments = requiredDocumentRepository.findAll(pageable);
+        return requiredDocuments.map(document -> modelMapper.map(document, RequiredDocumentDto.class));
     }
 
-    public RequiredDocument getRequiredDocumentById(ObjectId id) throws RequiredDocumentException {
-        return requiredDocumentRepository.findById(id)
-                .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
-    }
-
-    public RequiredDocument createRequiredDocument(RequiredDocument requiredDocument,MultipartFile imageFile) throws ImageException {
-        if (imageFile != null) {
-            try {
-                String imageId = storeImage(imageFile);
-                requiredDocument.setImageId(imageId);
-                return requiredDocumentRepository.save(requiredDocument);
-            } catch (IOException ioException) {
-                throw new ImageException("Error when storing the image");
-            }
-        }
-        return requiredDocumentRepository.save(requiredDocument);
-    }
-
-    public RequiredDocument updateRequiredDocument(ObjectId id, RequiredDocument requiredDocumentUpdated,MultipartFile imageFile) throws RequiredDocumentException,ImageException {
+    public RequiredDocumentDto getRequiredDocumentById(ObjectId id) throws RequiredDocumentException {
         RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
                 .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
+        return modelMapper.map(requiredDocument, RequiredDocumentDto.class);
+    }
 
-        requiredDocument.setDescription(requiredDocumentUpdated.getDescription());
-        requiredDocument.setName(requiredDocument.getName());
+    public RequiredDocumentDto createRequiredDocument(RequiredDocumentDto requiredDocumentDto, MultipartFile imageFile) throws ImageException {
+        RequiredDocument requiredDocument = modelMapper.map(requiredDocumentDto, RequiredDocument.class);
 
         if (imageFile != null) {
             try {
                 String imageId = storeImage(imageFile);
                 requiredDocument.setImageId(imageId);
-                return requiredDocumentRepository.save(requiredDocument);
             } catch (IOException ioException) {
                 throw new ImageException("Error when storing the image");
             }
         }
-        return requiredDocumentRepository.save(requiredDocument);
+
+        RequiredDocument savedDocument = requiredDocumentRepository.save(requiredDocument);
+        return modelMapper.map(savedDocument, RequiredDocumentDto.class);
+    }
+
+    public RequiredDocumentDto updateRequiredDocument(ObjectId id, RequiredDocumentDto requiredDocumentDto, MultipartFile imageFile) throws RequiredDocumentException, ImageException {
+        RequiredDocument existingDocument = requiredDocumentRepository.findById(id)
+                .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
+
+        modelMapper.map(requiredDocumentDto, existingDocument);
+
+        if (imageFile != null) {
+            try {
+                String imageId = storeImage(imageFile);
+                existingDocument.setImageId(imageId);
+            } catch (IOException ioException) {
+                throw new ImageException("Error when storing the image");
+            }
+        }
+
+        RequiredDocument updatedDocument = requiredDocumentRepository.save(existingDocument);
+        return modelMapper.map(updatedDocument, RequiredDocumentDto.class);
     }
 
     public void deleteRequiredDocument(ObjectId id) throws RequiredDocumentException {
@@ -84,26 +97,22 @@ public class RequiredDocumentService {
         requiredDocumentRepository.delete(requiredDocument);
     }
 
-    public Page<RequiredDocument> searchRequiredDocuments(String searchText, Pageable pageable) {
-        TextCriteria criteria = TextCriteria.forDefaultLanguage()
-                .matching(searchText);
-
-        Query query = TextQuery.queryText(criteria)
-                .sortByScore();
-
+    public Page<RequiredDocumentDto> searchRequiredDocuments(String searchText, Pageable pageable) {
+        TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
+        Query query = TextQuery.queryText(criteria).sortByScore();
         query.with(pageable);
 
         long total = mongoTemplate.count(query, RequiredDocument.class);
+        List<RequiredDocument> documents = mongoTemplate.find(query, RequiredDocument.class);
+        List<RequiredDocumentDto> documentDtos = documents.stream().map(document -> modelMapper.map(document, RequiredDocumentDto.class)).toList();
 
-        List<RequiredDocument> processes = mongoTemplate.find(query, RequiredDocument.class);
-
-        return PageableExecutionUtils.getPage(processes, pageable, () -> total);
+        return PageableExecutionUtils.getPage(documentDtos, pageable, () -> total);
     }
 
     public String storeImage(MultipartFile imageFile) throws IOException {
         GridFSUploadOptions options = new GridFSUploadOptions()
                 .metadata(new Document("contentType", imageFile.getContentType())
                         .append("contentSize", imageFile.getSize()));
-        return gridFsTemplate.store(imageFile.getInputStream(), Objects.requireNonNull(imageFile.getOriginalFilename()),options).toString();
+        return gridFsTemplate.store(imageFile.getInputStream(), Objects.requireNonNull(imageFile.getOriginalFilename()), options).toString();
     }
 }

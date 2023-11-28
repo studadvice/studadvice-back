@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 
 import org.bson.types.ObjectId;
 
+import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +30,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/administrative-process")
 public class AdministrativeProcessController {
-
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private AdministrativeProcessService administrativeProcessService;
 
@@ -52,14 +55,13 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "201", description = "Administrative process created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
-
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcessDto createAdministrativeProcess(@Valid @RequestPart("administrativeProcess") AdministrativeProcess administrativeProcess, @RequestParam("imageFile") MultipartFile imageFile) {
+    public AdministrativeProcessDto createAdministrativeProcess(@Valid @RequestPart("administrativeProcess") AdministrativeProcessDto administrativeProcessDto, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return administrativeProcessService.createAdministrativeProcess(administrativeProcess,imageFile);
-        }
-        catch (AdministrativeProcessException | ImageException administrativeProcessException){
+            AdministrativeProcess administrativeProcess = modelMapper.map(administrativeProcessDto, AdministrativeProcess.class);
+            return administrativeProcessService.createAdministrativeProcess(administrativeProcess, imageFile);
+        } catch (AdministrativeProcessException | ImageException administrativeProcessException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
@@ -69,16 +71,17 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative process updated successfully"),
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
-    @PutMapping(value = "/{administrativeProcessId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{administrativeProcessId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcessDto updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestPart AdministrativeProcess updatedProcess,@RequestParam("imageFile") MultipartFile imageFile) {
+    public AdministrativeProcessDto updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestPart AdministrativeProcessDto updatedProcessDto, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess,imageFile);
-        }
-        catch (AdministrativeProcessException | ImageException administrativeProcessException){
+            AdministrativeProcess updatedProcess = modelMapper.map(updatedProcessDto, AdministrativeProcess.class);
+            return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId, updatedProcess, imageFile);
+        } catch (AdministrativeProcessException | ImageException administrativeProcessException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
+
 
     @Operation(summary = "Delete an administrative process by ID")
     @ApiResponses(value = {
