@@ -2,6 +2,7 @@ package com.stud.studadvice.service;
 
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 
+import com.stud.studadvice.dto.administrative.AdministrativeProcessDto;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.administrative.AdministrativeProcess;
@@ -13,6 +14,7 @@ import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +29,12 @@ import java.io.IOException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class AdministrativeProcessService {
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
@@ -39,12 +44,13 @@ public class AdministrativeProcessService {
     @Autowired
     private GridFsTemplate gridFsTemplate;
 
-    public AdministrativeProcess getAdministrativeProcessById(ObjectId administrativeProcessId) throws AdministrativeProcessException {
-        return administrativeProcessRepository.findById(administrativeProcessId)
+    public AdministrativeProcessDto getAdministrativeProcessById(ObjectId administrativeProcessId) throws AdministrativeProcessException {
+        AdministrativeProcess administrativeProcess = administrativeProcessRepository.findById(administrativeProcessId)
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
+        return modelMapper.map(administrativeProcess, AdministrativeProcessDto.class);
     }
 
-    public AdministrativeProcess createAdministrativeProcess(AdministrativeProcess administrativeProcess, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
+    public AdministrativeProcessDto createAdministrativeProcess(AdministrativeProcess administrativeProcess, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
         if(administrativeProcess.getSteps()!= null) {
             for (Step step : administrativeProcess.getSteps()) {
                 if(step.getRequiredDocuments()!= null) {
@@ -60,15 +66,15 @@ public class AdministrativeProcessService {
         try{
             String imageId = storeImage(imageFile);
             administrativeProcess.setImageId(imageId);
-            return administrativeProcessRepository.save(administrativeProcess);
-
+            AdministrativeProcess administrativeProcessCreated = administrativeProcessRepository.save(administrativeProcess);
+            return modelMapper.map(administrativeProcessCreated, AdministrativeProcessDto.class);
         }
         catch (IOException ioException){
             throw new ImageException("Error when storing the image");
         }
     }
 
-    public AdministrativeProcess updateAdministrativeProcess(ObjectId administrativeProcessId, AdministrativeProcess updatedProcess,MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
+    public AdministrativeProcessDto updateAdministrativeProcess(ObjectId administrativeProcessId, AdministrativeProcess updatedProcess,MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
 
         AdministrativeProcess existingProcess = administrativeProcessRepository.findById(administrativeProcessId)
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
@@ -96,7 +102,8 @@ public class AdministrativeProcessService {
         try{
             String imageId = storeImage(imageFile);
             existingProcess.setImageId(imageId);
-            return administrativeProcessRepository.save(existingProcess);
+            AdministrativeProcess administrativeProcessUpdated = administrativeProcessRepository.save(existingProcess);
+            return modelMapper.map(administrativeProcessUpdated, AdministrativeProcessDto.class);
         }
         catch (IOException ioException){
             throw new ImageException("Error when storing the image");
@@ -110,7 +117,7 @@ public class AdministrativeProcessService {
         administrativeProcessRepository.deleteById(administrativeProcessId);
     }
 
-    public Page<AdministrativeProcess> getAdministrativeProcesses(Integer age, String nationality, String university, String education, Pageable pageable) {
+    public Page<AdministrativeProcessDto> getAdministrativeProcesses(Integer age, String nationality, String university, String education, Pageable pageable) {
         Criteria criteria = new Criteria();
 
         if (age != null) {
@@ -137,24 +144,31 @@ public class AdministrativeProcessService {
 
         List<AdministrativeProcess> processes = mongoTemplate.find(query, AdministrativeProcess.class);
 
-        return PageableExecutionUtils.getPage(processes, pageable, () -> total);
+        List<AdministrativeProcessDto> dtos = processes.stream()
+                .map(process -> modelMapper.map(process, AdministrativeProcessDto.class))
+                .collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(dtos, pageable, () -> total);
     }
 
-    public Page<AdministrativeProcess> searchAdministrativeProcess(String searchText,Pageable pageable) {
-        TextCriteria criteria = TextCriteria.forDefaultLanguage()
-                .matching(searchText);
 
-        Query query = TextQuery.queryText(criteria)
-                .sortByScore();
+    public Page<AdministrativeProcessDto> searchAdministrativeProcess(String searchText, Pageable pageable) {
+        TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
 
+        Query query = TextQuery.queryText(criteria).sortByScore();
         query.with(pageable);
 
         long total = mongoTemplate.count(query, AdministrativeProcess.class);
 
         List<AdministrativeProcess> processes = mongoTemplate.find(query, AdministrativeProcess.class);
 
-        return PageableExecutionUtils.getPage(processes, pageable, () -> total);
+        List<AdministrativeProcessDto> dtos = processes.stream()
+                .map(process -> modelMapper.map(process, AdministrativeProcessDto.class))
+                .collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(dtos, pageable, () -> total);
     }
+
 
     public String storeImage(MultipartFile imageFile) throws IOException {
         GridFSUploadOptions options = new GridFSUploadOptions()

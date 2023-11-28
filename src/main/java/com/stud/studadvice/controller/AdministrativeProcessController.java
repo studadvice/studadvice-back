@@ -1,5 +1,6 @@
 package com.stud.studadvice.controller;
 
+import com.stud.studadvice.dto.administrative.AdministrativeProcessDto;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.administrative.AdministrativeProcess;
@@ -37,7 +38,7 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
     @GetMapping("/{administrativeProcessId}")
-    public AdministrativeProcess getAdministrativeProcessById(@PathVariable ObjectId administrativeProcessId) {
+    public AdministrativeProcessDto getAdministrativeProcessById(@PathVariable ObjectId administrativeProcessId) {
         try {
             return administrativeProcessService.getAdministrativeProcessById(administrativeProcessId);
         }
@@ -54,7 +55,7 @@ public class AdministrativeProcessController {
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcess createAdministrativeProcess(@Valid @RequestPart("administrativeProcess") AdministrativeProcess administrativeProcess, @RequestParam("imageFile") MultipartFile imageFile) {
+    public AdministrativeProcessDto createAdministrativeProcess(@Valid @RequestPart("administrativeProcess") AdministrativeProcess administrativeProcess, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
             return administrativeProcessService.createAdministrativeProcess(administrativeProcess,imageFile);
         }
@@ -70,7 +71,7 @@ public class AdministrativeProcessController {
     })
     @PutMapping(value = "/{administrativeProcessId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestPart AdministrativeProcess updatedProcess,@RequestParam("imageFile") MultipartFile imageFile) {
+    public AdministrativeProcessDto updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestPart AdministrativeProcess updatedProcess,@RequestParam("imageFile") MultipartFile imageFile) {
         try {
             return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess,imageFile);
         }
@@ -101,7 +102,7 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
     @GetMapping
-    public Page<AdministrativeProcess> getAdministrativeProcesses(
+    public Page<AdministrativeProcessDto> getAdministrativeProcesses(
             @RequestParam(required = false) Integer age,
             @RequestParam(required = false) String nationality,
             @RequestParam(required = false) String university,
@@ -118,7 +119,7 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
     @GetMapping("/search")
-    public Page<AdministrativeProcess> searchAdministrativeProcess(@RequestParam String searchText,
+    public Page<AdministrativeProcessDto> searchAdministrativeProcess(@RequestParam String searchText,
                                                                    @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
                                                                    @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
 
