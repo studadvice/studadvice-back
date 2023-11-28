@@ -1,6 +1,6 @@
 package com.stud.studadvice.repository.administrative;
 
-import com.stud.studadvice.entity.administrative.AdministrativeProcess;
+import com.stud.studadvice.entity.AdministrativeProcess;
 
 import org.bson.types.ObjectId;
 

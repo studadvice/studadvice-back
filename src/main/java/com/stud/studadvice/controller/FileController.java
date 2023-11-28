@@ -1,6 +1,6 @@
 package com.stud.studadvice.controller;
 
-import com.stud.studadvice.dto.util.File;
+import com.stud.studadvice.dto.FileDto;
 import com.stud.studadvice.service.FileService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class FileController {
     @GetMapping("/download/{imageId}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String imageId){
         try {
-            File file = imageService.download(imageId);
+            FileDto file = imageService.download(imageId);
             if (imageService.checkFile(file)) {
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(file.getFileType()))

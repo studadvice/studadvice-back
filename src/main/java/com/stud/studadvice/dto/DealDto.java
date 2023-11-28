@@ -1,4 +1,4 @@
-package com.stud.studadvice.dto.deal;
+package com.stud.studadvice.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -6,14 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
-public class Deal {
+public class DealDto {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     @NotNull(message = "Please, give a title to your deal")
@@ -25,6 +21,6 @@ public class Deal {
     private String startDate;
     private String endDate;
 
-    public Deal() {
+    public DealDto() {
     }
 }

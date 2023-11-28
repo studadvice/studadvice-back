@@ -2,12 +2,12 @@ package com.stud.studadvice.service;
 
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 
-import com.stud.studadvice.dto.administrative.AdministrativeProcessDto;
+import com.stud.studadvice.dto.AdministrativeProcessDto;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.entity.administrative.AdministrativeProcess;
-import com.stud.studadvice.entity.administrative.RequiredDocument;
-import com.stud.studadvice.entity.administrative.Step;
+import com.stud.studadvice.entity.AdministrativeProcess;
+import com.stud.studadvice.entity.RequiredDocument;
+import com.stud.studadvice.entity.Step;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
