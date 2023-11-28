@@ -1,6 +1,7 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.DealException;
+import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.model.deal.Deal;
 import com.stud.studadvice.service.DealsService;
 
@@ -16,8 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -60,10 +62,15 @@ public class DealsController {
             @ApiResponse(responseCode = "201", description = "Student deal created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Deal createDeal(@Valid @RequestBody Deal newDeal) {
-        return dealsService.createDeal(newDeal);
+    public Deal createDeal(@Valid @RequestPart Deal newDeal,@RequestParam("imageFile") MultipartFile imageFile) {
+        try{
+            return dealsService.createDeal(newDeal,imageFile);
+        }
+        catch (ImageException imageException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, imageException.getMessage(), imageException);
+        }
     }
 
     @Operation(summary = "Update an existing student deal by ID")
@@ -71,12 +78,11 @@ public class DealsController {
             @ApiResponse(responseCode = "200", description = "Student deal updated successfully"),
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
-    @PutMapping("/{dealId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public Deal updateDeal(@PathVariable ObjectId dealId, @Valid @RequestBody Deal updatedDeal) {
+    @PutMapping(value = "/{dealId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Deal updateDeal(@PathVariable ObjectId dealId, @Valid @RequestPart Deal updatedDeal,@RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return dealsService.updateDeal(dealId, updatedDeal);
-        } catch (DealException dealException) {
+            return dealsService.updateDeal(dealId, updatedDeal,imageFile);
+        } catch (DealException | ImageException dealException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
         }
     }

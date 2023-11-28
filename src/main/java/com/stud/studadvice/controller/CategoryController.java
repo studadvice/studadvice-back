@@ -2,6 +2,7 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
+import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.model.administrative.AdministrativeProcess;
 import com.stud.studadvice.model.administrative.Category;
 import com.stud.studadvice.service.CategoryService;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -63,13 +65,13 @@ public class CategoryController {
             @ApiResponse(responseCode = "201", description = "Category created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Category createCategory(@RequestBody Category category) {
+    public Category createCategory(@Valid @RequestPart Category category,@RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return categoryService.createCategory(category);
+            return categoryService.createCategory(category,imageFile);
         }
-        catch (AdministrativeProcessException administrativeProcessException){
+        catch (AdministrativeProcessException | ImageException administrativeProcessException){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
@@ -79,17 +81,14 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Category updated successfully", content = @Content(schema = @Schema(implementation = Category.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @PutMapping("/{categoryId}")
+    @PutMapping(value = "/{categoryId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Category updateCategoryById(@PathVariable ObjectId categoryId, @RequestBody Category category) {
+    public Category updateCategoryById(@PathVariable ObjectId categoryId, @Valid @RequestPart Category category, @RequestParam("imageFile") MultipartFile imageFile) {
         try{
-            return categoryService.updateCategoryById(categoryId, category);
+            return categoryService.updateCategoryById(categoryId, category,imageFile);
         }
-        catch (CategoryException categoryException) {
+        catch (CategoryException | AdministrativeProcessException | ImageException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
-        }
-        catch (AdministrativeProcessException administrativeProcessException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 
@@ -135,11 +134,8 @@ public class CategoryController {
         try {
             return categoryService.addAdministrativeProcessToAnExistingCategory(categoryId,administrativeProcessId);
         }
-        catch (CategoryException categoryException) {
+        catch (CategoryException | AdministrativeProcessException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
-        }
-        catch (AdministrativeProcessException administrativeProcessException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 

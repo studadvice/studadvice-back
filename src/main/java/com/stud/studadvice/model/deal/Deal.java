@@ -30,7 +30,7 @@ public class Deal {
     private String description;
     private String category;
     @NotNull(message = "Please, give an image for your deal")
-    private String image;
+    private String imageId;
     private String startDate;
     private String endDate;
 

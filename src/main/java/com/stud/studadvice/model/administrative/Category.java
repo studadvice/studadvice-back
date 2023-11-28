@@ -27,8 +27,7 @@ public class Category {
     private String name;
     @NotNull(message = "Please, give a description for your category")
     private String description;
-    @NotNull(message = "Please, give an image for your category")
-    private String image;
+    private String imageId;
     @DocumentReference
     private List<AdministrativeProcess> administrativeProcesses;
     public Category() {

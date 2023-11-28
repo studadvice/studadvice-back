@@ -18,7 +18,7 @@ public class Step {
     private String name;
     @NotNull(message = "Please, give a description for your step")
     private String description;
-    private String image;
+    private String imageId;
     @DocumentReference
     private List<RequiredDocument> requiredDocuments;
     private List<Resource> resources;
