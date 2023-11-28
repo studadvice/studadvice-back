@@ -24,3 +24,4 @@ jobs:
           script: |
             echo ${{ secrets.PASSWORD }} | sudo -S docker pull ghcr.io/${{ github.repository_owner }}/studadvice:latest
             echo ${{ secrets.PASSWORD }} | sudo -S docker stack deploy --compose-file docker-compose.yml back_dev
+            echo ${{ secrets.PASSWORD }} | sudo docker service update --image ghcr.io/studadvice/studadvice --force back_dev_studadvice-back
