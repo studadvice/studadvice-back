@@ -1,7 +1,7 @@
 package com.stud.studadvice.service;
 
 import com.stud.studadvice.exception.DealException;
-import com.stud.studadvice.model.deal.Deal;
+import com.stud.studadvice.entity.deal.Deal;
 
 import com.stud.studadvice.repository.deals.DealsRepository;
 import org.bson.types.ObjectId;

@@ -1,4 +1,4 @@
-package com.stud.studadvice.model.administrative;
+package com.stud.studadvice.entity.administrative;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

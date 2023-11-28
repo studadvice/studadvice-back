@@ -1,7 +1,7 @@
 package com.stud.studadvice.service;
 
 import com.stud.studadvice.exception.RequiredDocumentException;
-import com.stud.studadvice.model.administrative.RequiredDocument;
+import com.stud.studadvice.entity.administrative.RequiredDocument;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
 import org.bson.types.ObjectId;

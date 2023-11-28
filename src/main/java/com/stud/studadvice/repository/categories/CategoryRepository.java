@@ -1,6 +1,6 @@
 package com.stud.studadvice.repository.categories;
 
-import com.stud.studadvice.model.administrative.Category;
+import com.stud.studadvice.entity.administrative.Category;
 
 import org.bson.types.ObjectId;
 

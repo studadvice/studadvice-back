@@ -1,4 +1,4 @@
-package com.stud.studadvice.model.deal;
+package com.stud.studadvice.entity.deal;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

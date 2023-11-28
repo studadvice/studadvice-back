@@ -3,7 +3,7 @@ package com.stud.studadvice.service;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.model.deal.Deal;
+import com.stud.studadvice.entity.deal.Deal;
 import com.stud.studadvice.repository.deals.DealsRepository;
 
 import org.bson.Document;
@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

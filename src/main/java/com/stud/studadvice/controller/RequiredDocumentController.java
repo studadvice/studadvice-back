@@ -2,7 +2,7 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.exception.RequiredDocumentException;
-import com.stud.studadvice.model.administrative.RequiredDocument;
+import com.stud.studadvice.entity.administrative.RequiredDocument;
 import com.stud.studadvice.service.RequiredDocumentService;
 
 import io.swagger.v3.oas.annotations.Operation;
