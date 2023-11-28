@@ -1,6 +1,8 @@
 package com.stud.studadvice.service;
 
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
+import com.stud.studadvice.dto.AdministrativeProcessDto;
+import com.stud.studadvice.dto.CategoryDto;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.exception.ImageException;
@@ -13,6 +15,7 @@ import org.bson.types.ObjectId;
 
 import com.stud.studadvice.entity.Category;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,22 +34,31 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
     @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
     private GridFsTemplate gridFsTemplate;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private AdministrativeProcessRepository administrativeProcessRepository;
 
-    public Page<Category> getCategories(Pageable pageable) {
-        return categoryRepository.findAll(pageable);
+    public Page<CategoryDto> getCategories(Pageable pageable) {
+        Page<Category> categoryPage = categoryRepository.findAll(pageable);
+
+        List<CategoryDto> categoryDtos = categoryPage.getContent().stream()
+                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(categoryDtos, pageable, categoryPage.getTotalElements());
     }
 
-    public Category getCategoryById(ObjectId categoryId) throws CategoryException {
-        return categoryRepository.findById(categoryId)
+    public CategoryDto getCategoryById(ObjectId categoryId) throws CategoryException {
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException("Category not found"));
-    }
 
-    public Category createCategory(Category category, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
+        return modelMapper.map(category, CategoryDto.class);
+    }
+    public CategoryDto createCategory(Category category, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
         if (category.getAdministrativeProcesses() != null) {
             for (AdministrativeProcess administrativeProcess : category.getAdministrativeProcesses()) {
                 if (administrativeProcessRepository.findById(administrativeProcess.getId()).isEmpty()) {
@@ -55,24 +67,26 @@ public class CategoryService {
             }
         }
 
-        try{
+        try {
             String imageId = storeImage(imageFile);
             category.setImageId(imageId);
-            return categoryRepository.save(category);
-        }
-        catch (IOException ioException){
+            Category createdCategory = categoryRepository.save(category);
+
+            return modelMapper.map(createdCategory, CategoryDto.class);
+        } catch (IOException ioException) {
             throw new ImageException("Error when storing the image");
         }
     }
 
-    public Category updateCategoryById(ObjectId categoryId, Category categoryUpdated, MultipartFile imageFile) throws CategoryException, AdministrativeProcessException, ImageException {
+
+    public CategoryDto updateCategoryById(ObjectId categoryId, Category categoryUpdated, MultipartFile imageFile) throws CategoryException, AdministrativeProcessException, ImageException {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException("Category not found"));
 
         if (categoryUpdated.getAdministrativeProcesses() != null) {
             for (AdministrativeProcess administrativeProcess : categoryUpdated.getAdministrativeProcesses()) {
                 if (administrativeProcessRepository.findById(administrativeProcess.getId()).isEmpty()) {
-                        throw new AdministrativeProcessException("Administrative process not found");
+                    throw new AdministrativeProcessException("Administrative process not found");
                 }
             }
         }
@@ -81,16 +95,17 @@ public class CategoryService {
         existingCategory.setName(categoryUpdated.getName());
         existingCategory.setAdministrativeProcesses(categoryUpdated.getAdministrativeProcesses());
 
-        try{
+        try {
             String imageId = storeImage(imageFile);
             existingCategory.setImageId(imageId);
-            return categoryRepository.save(existingCategory);
-        }
-        catch (IOException ioException){
+            Category updatedCategory = categoryRepository.save(existingCategory);
+
+            return modelMapper.map(updatedCategory, CategoryDto.class);
+        } catch (IOException ioException) {
             throw new ImageException("Error when storing the image");
         }
-
     }
+
 
     public void deleteCategoryById(ObjectId categoryId) throws CategoryException {
         Category category = categoryRepository.findById(categoryId)
@@ -99,7 +114,7 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
-    public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(ObjectId categoryId, Integer age, String nationality, String university, String education, Pageable pageable) throws CategoryException {
+    public Page<AdministrativeProcessDto> getAdministrativeProcessByCategoryId(ObjectId categoryId, Integer age, String nationality, String university, String education, Pageable pageable) throws CategoryException {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException("Category not found"));
 
@@ -110,22 +125,27 @@ public class CategoryService {
                         && (nationality == null || new HashSet<>(process.getNationalities()).contains(nationality))
                         && (university == null || new HashSet<>(process.getUniversities()).contains(university))
                         && (education == null || new HashSet<>(process.getEducations()).contains(education)))
+                .toList();
+
+        List<AdministrativeProcessDto> dtos = filteredAdministrativeProcesses.stream()
+                .map(process -> modelMapper.map(process, AdministrativeProcessDto.class))
                 .collect(Collectors.toList());
 
         if (pageable.isPaged()) {
             int start = (int) pageable.getOffset();
-            int end = Math.min((start + pageable.getPageSize()), filteredAdministrativeProcesses.size());
-            List<AdministrativeProcess> paginatedProcesses = filteredAdministrativeProcesses.subList(start, end);
+            int end = Math.min((start + pageable.getPageSize()), dtos.size());
+            List<AdministrativeProcessDto> paginatedDtos = dtos.subList(start, end);
 
-            long totalCount = filteredAdministrativeProcesses.size();
+            long totalCount = dtos.size();
 
-            return new PageImpl<>(paginatedProcesses, pageable, totalCount);
+            return new PageImpl<>(paginatedDtos, pageable, totalCount);
         } else {
-            return new PageImpl<>(filteredAdministrativeProcesses, pageable, filteredAdministrativeProcesses.size());
+            return new PageImpl<>(dtos, pageable, dtos.size());
         }
     }
 
-    public Category addAdministrativeProcessToAnExistingCategory(ObjectId categoryId, ObjectId administrativeProcessId) throws CategoryException, AdministrativeProcessException {
+
+    public CategoryDto addAdministrativeProcessToAnExistingCategory(ObjectId categoryId, ObjectId administrativeProcessId) throws CategoryException, AdministrativeProcessException {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException("Category not found"));
 
@@ -136,16 +156,18 @@ public class CategoryService {
 
         if (administrativeProcesses != null) {
             administrativeProcesses.add(existingAdministrativeProcess);
-        }
-        else{
+        } else {
             administrativeProcesses = new ArrayList<>();
             administrativeProcesses.add(existingAdministrativeProcess);
         }
 
         existingCategory.setAdministrativeProcesses(administrativeProcesses);
 
-        return categoryRepository.save(existingCategory);
+        Category updatedCategory = categoryRepository.save(existingCategory);
+
+        return modelMapper.map(updatedCategory, CategoryDto.class);
     }
+
     public String storeImage(MultipartFile imageFile) throws IOException {
         GridFSUploadOptions options = new GridFSUploadOptions()
                 .metadata(new Document("contentType", imageFile.getContentType())

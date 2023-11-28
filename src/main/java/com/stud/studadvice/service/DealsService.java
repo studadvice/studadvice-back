@@ -1,16 +1,17 @@
 package com.stud.studadvice.service;
 
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
+import com.stud.studadvice.dto.DealDto;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.Deal;
 import com.stud.studadvice.repository.deals.DealsRepository;
-
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DealsService {
@@ -37,22 +39,31 @@ public class DealsService {
     @Autowired
     private DealsRepository dealsRepository;
 
-    public Page<Deal> getDeals(Pageable pageable) {
-        return dealsRepository.findAll(pageable);
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public Page<DealDto> getDeals(Pageable pageable) {
+        Page<Deal> dealPage = dealsRepository.findAll(pageable);
+        List<DealDto> dealDtos = dealPage.getContent().stream()
+                .map(deal -> modelMapper.map(deal, DealDto.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dealDtos, pageable, dealPage.getTotalElements());
     }
 
-    public Deal createDeal(Deal deal,MultipartFile imageFile) throws ImageException {
-        try{
+    public DealDto createDeal(Deal deal, MultipartFile imageFile) throws ImageException {
+        try {
             String imageId = storeImage(imageFile);
             deal.setImageId(imageId);
-            return dealsRepository.save(deal);
-        }
-        catch (IOException ioException){
+            Deal createdDeal = dealsRepository.save(deal);
+
+            return modelMapper.map(createdDeal, DealDto.class);
+        } catch (IOException ioException) {
             throw new ImageException("Error when storing the image");
         }
     }
 
-    public Deal updateDeal(ObjectId dealId, Deal updatedDeal,MultipartFile imageFile) throws DealException, ImageException {
+    public DealDto updateDeal(ObjectId dealId, Deal updatedDeal, MultipartFile imageFile) throws DealException, ImageException {
         Optional<Deal> existingDeal = dealsRepository.findById(dealId);
         if (existingDeal.isPresent()) {
             Deal dealToUpdate = existingDeal.get();
@@ -63,12 +74,13 @@ public class DealsService {
             dealToUpdate.setStartDate(updatedDeal.getStartDate());
             dealToUpdate.setEndDate(updatedDeal.getEndDate());
 
-            try{
+            try {
                 String imageId = storeImage(imageFile);
                 dealToUpdate.setImageId(imageId);
-                return dealsRepository.save(dealToUpdate);
-            }
-            catch (IOException ioException){
+                Deal updatedDealEntity = dealsRepository.save(dealToUpdate);
+
+                return modelMapper.map(updatedDealEntity, DealDto.class);
+            } catch (IOException ioException) {
                 throw new ImageException("Error when storing the image");
             }
         } else {
@@ -84,12 +96,14 @@ public class DealsService {
         }
     }
 
-    public Deal getDealById(ObjectId dealId) throws DealException {
-        return dealsRepository.findById(dealId)
+    public DealDto getDealById(ObjectId dealId) throws DealException {
+        Deal deal = dealsRepository.findById(dealId)
                 .orElseThrow(() -> new DealException("Student deal not found"));
+
+        return modelMapper.map(deal, DealDto.class);
     }
 
-    public Page<Deal> searchDeals(String searchText, Pageable pageable) {
+    public Page<DealDto> searchDeals(String searchText, Pageable pageable) {
         TextCriteria criteria = TextCriteria.forDefaultLanguage()
                 .matching(searchText);
 
@@ -100,15 +114,18 @@ public class DealsService {
 
         long total = mongoTemplate.count(query, Deal.class);
 
-        List<Deal> processes = mongoTemplate.find(query, Deal.class);
+        List<Deal> deals = mongoTemplate.find(query, Deal.class);
+        List<DealDto> dealDtos = deals.stream()
+                .map(deal -> modelMapper.map(deal, DealDto.class))
+                .collect(Collectors.toList());
 
-        return PageableExecutionUtils.getPage(processes, pageable, () -> total);
+        return PageableExecutionUtils.getPage(dealDtos, pageable, () -> total);
     }
 
     public String storeImage(MultipartFile imageFile) throws IOException {
         GridFSUploadOptions options = new GridFSUploadOptions()
                 .metadata(new Document("contentType", imageFile.getContentType())
                         .append("contentSize", imageFile.getSize()));
-        return gridFsTemplate.store(imageFile.getInputStream(), Objects.requireNonNull(imageFile.getOriginalFilename()),options).toString();
+        return gridFsTemplate.store(imageFile.getInputStream(), Objects.requireNonNull(imageFile.getOriginalFilename()), options).toString();
     }
 }

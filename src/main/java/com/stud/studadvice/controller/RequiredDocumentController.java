@@ -1,5 +1,6 @@
 package com.stud.studadvice.controller;
 
+import com.stud.studadvice.dto.RequiredDocumentDto;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.exception.RequiredDocumentException;
 import com.stud.studadvice.entity.RequiredDocument;
@@ -34,9 +35,8 @@ public class RequiredDocumentController {
 
     @Operation(summary = "Retrieve all required documents")
     @GetMapping
-    public Page<RequiredDocument> getRequiredDocuments(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
-                                                        @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
-
+    public Page<RequiredDocumentDto> getRequiredDocuments(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                                          @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return requiredDocumentService.getRequiredDocuments(pageable);
     }
@@ -47,7 +47,7 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "404", description = "Required document process not found"),
     })
     @GetMapping("/{requiredDocumentId}")
-    public RequiredDocument getRequiredDocumentById(@PathVariable ObjectId requiredDocumentId) {
+    public RequiredDocumentDto getRequiredDocumentById(@PathVariable ObjectId requiredDocumentId) {
         try {
             return requiredDocumentService.getRequiredDocumentById(requiredDocumentId);
         } catch (RequiredDocumentException requiredDocumentException) {
@@ -60,14 +60,13 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "201", description = "Required document created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public RequiredDocument createRequiredDocument(@Valid @RequestPart RequiredDocument requiredDocument,@Nullable @RequestParam("imageFile") MultipartFile imageFile) {
-        try{
-            return requiredDocumentService.createRequiredDocument(requiredDocument,imageFile);
-        }
-        catch (ImageException imageException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, imageException.getMessage(), imageException);
+    public RequiredDocumentDto createRequiredDocument(@Valid @RequestPart RequiredDocumentDto requiredDocumentDto, @Nullable @RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            return requiredDocumentService.createRequiredDocument(requiredDocumentDto, imageFile);
+        } catch (ImageException imageException) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, imageException.getMessage(), imageException);
         }
     }
 
@@ -76,12 +75,11 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "200", description = "Required document updated successfully"),
             @ApiResponse(responseCode = "404", description = "Required document not found"),
     })
-    @PutMapping(value = "/{requiredDocumentId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
-    public RequiredDocument updateRequiredDocument(@PathVariable ObjectId requiredDocumentId, @Valid @RequestPart RequiredDocument requiredDocumentUpdated,@Nullable @RequestParam("imageFile") MultipartFile imageFile) {
+    @PutMapping(value = "/{requiredDocumentId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public RequiredDocumentDto updateRequiredDocument(@PathVariable ObjectId requiredDocumentId, @Valid @RequestPart RequiredDocumentDto updatedDocumentDto, @Nullable @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return requiredDocumentService.updateRequiredDocument(requiredDocumentId,requiredDocumentUpdated,imageFile);
-        }
-        catch (RequiredDocumentException | ImageException requiredDocumentException){
+            return requiredDocumentService.updateRequiredDocument(requiredDocumentId, updatedDocumentDto, imageFile);
+        } catch (RequiredDocumentException | ImageException requiredDocumentException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
         }
     }
@@ -94,10 +92,9 @@ public class RequiredDocumentController {
     @DeleteMapping("/{requiredDocumentId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteRequiredDocument(@PathVariable ObjectId requiredDocumentId) {
-        try{
+        try {
             requiredDocumentService.deleteRequiredDocument(requiredDocumentId);
-        }
-        catch (RequiredDocumentException requiredDocumentException){
+        } catch (RequiredDocumentException requiredDocumentException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
         }
     }
@@ -107,12 +104,10 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "200", description = "Required documents retrieved successfully"),
     })
     @GetMapping("/search")
-    public Page<RequiredDocument> searchRequiredDocuments(@RequestParam String searchText,
-                                                          @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}")int page,
-                                                          @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
-
+    public Page<RequiredDocumentDto> searchRequiredDocuments(@RequestParam String searchText,
+                                                             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                                             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return requiredDocumentService.searchRequiredDocuments(searchText,pageable);
+        return requiredDocumentService.searchRequiredDocuments(searchText, pageable);
     }
-
 }

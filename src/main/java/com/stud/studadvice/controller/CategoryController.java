@@ -1,5 +1,7 @@
 package com.stud.studadvice.controller;
 
+import com.stud.studadvice.dto.AdministrativeProcessDto;
+import com.stud.studadvice.dto.CategoryDto;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.exception.ImageException;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import org.bson.types.ObjectId;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,14 +35,15 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
-
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private CategoryService categoryService;
 
     @Operation(summary = "Get all categories")
     @GetMapping
-    public Page<Category> getCategories(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
-                                        @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
+    public Page<CategoryDto> getCategories(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                           @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         return categoryService.getCategories(pageable);
@@ -51,7 +55,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{categoryId}")
-    public Category getCategoryById(@PathVariable ObjectId categoryId) {
+    public CategoryDto getCategoryById(@PathVariable ObjectId categoryId) {
         try {
             return categoryService.getCategoryById(categoryId);
         }
@@ -65,32 +69,33 @@ public class CategoryController {
             @ApiResponse(responseCode = "201", description = "Category created successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Category createCategory(@Valid @RequestPart Category category,@RequestParam("imageFile") MultipartFile imageFile) {
+    public CategoryDto createCategory(@Valid @RequestPart CategoryDto categoryDto, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return categoryService.createCategory(category,imageFile);
-        }
-        catch (AdministrativeProcessException | ImageException administrativeProcessException){
+            Category category = modelMapper.map(categoryDto, Category.class);
+            return categoryService.createCategory(category, imageFile);
+        } catch (AdministrativeProcessException | ImageException administrativeProcessException) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
         }
     }
 
     @Operation(summary = "Update a category by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Category updated successfully", content = @Content(schema = @Schema(implementation = Category.class))),
+            @ApiResponse(responseCode = "200", description = "Category updated successfully", content = @Content(schema = @Schema(implementation = CategoryDto.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @PutMapping(value = "/{categoryId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{categoryId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Category updateCategoryById(@PathVariable ObjectId categoryId, @Valid @RequestPart Category category, @RequestParam("imageFile") MultipartFile imageFile) {
-        try{
-            return categoryService.updateCategoryById(categoryId, category,imageFile);
-        }
-        catch (CategoryException | AdministrativeProcessException | ImageException categoryException) {
+    public CategoryDto updateCategoryById(@PathVariable ObjectId categoryId, @Valid @RequestPart CategoryDto categoryDto, @RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            Category category = modelMapper.map(categoryDto, Category.class);
+            return categoryService.updateCategoryById(categoryId, category, imageFile);
+        } catch (CategoryException | AdministrativeProcessException | ImageException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
         }
     }
+
 
     @Operation(summary = "Delete a category by id")
     @ApiResponses(value = {
@@ -112,13 +117,13 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{categoryId}/administrative-process")
-    public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId,
-                                                                            @RequestParam(required = false) Integer age,
-                                                                            @RequestParam(required = false) String nationality,
-                                                                            @RequestParam(required = false) String university,
-                                                                            @RequestParam(required = false) String education,
-                                                                            @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
-                                                                            @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
+    public Page<AdministrativeProcessDto> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId,
+                                                                               @RequestParam(required = false) Integer age,
+                                                                               @RequestParam(required = false) String nationality,
+                                                                               @RequestParam(required = false) String university,
+                                                                               @RequestParam(required = false) String education,
+                                                                               @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                                                               @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
         Pageable pageable = PageRequest.of(page, size);
         try {
             return categoryService.getAdministrativeProcessByCategoryId(categoryId, age,nationality, university, education,pageable);
@@ -130,7 +135,7 @@ public class CategoryController {
 
     @PostMapping("/{categoryId})")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Category addAdministrativeProcessToAnExistingCategory(@PathVariable ObjectId categoryId,@RequestParam ObjectId administrativeProcessId){
+    public CategoryDto addAdministrativeProcessToAnExistingCategory(@PathVariable ObjectId categoryId,@RequestParam ObjectId administrativeProcessId){
         try {
             return categoryService.addAdministrativeProcessToAnExistingCategory(categoryId,administrativeProcessId);
         }

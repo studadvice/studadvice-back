@@ -1,5 +1,6 @@
 package com.stud.studadvice.controller;
 
+import com.stud.studadvice.dto.DealDto;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.Deal;
@@ -35,8 +36,8 @@ public class DealsController {
 
     @Operation(summary = "Retrieve a list of all student deals")
     @GetMapping
-    public Page<Deal> getDeals(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
-                               @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
+    public Page<DealDto> getDeals(@RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                  @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         return dealsService.getDeals(pageable);
@@ -48,7 +49,7 @@ public class DealsController {
             @ApiResponse(responseCode = "404", description = "Deal not found"),
     })
     @GetMapping("/{dealId}")
-    public Deal getDealById(@PathVariable ObjectId dealId) {
+    public DealDto getDealById(@PathVariable ObjectId dealId) {
         try {
             return dealsService.getDealById(dealId);
         } catch (DealException dealException) {
@@ -64,7 +65,7 @@ public class DealsController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Deal createDeal(@Valid @RequestPart Deal newDeal,@RequestParam("imageFile") MultipartFile imageFile) {
+    public DealDto createDeal(@Valid @RequestPart Deal newDeal,@RequestParam("imageFile") MultipartFile imageFile) {
         try{
             return dealsService.createDeal(newDeal,imageFile);
         }
@@ -79,7 +80,7 @@ public class DealsController {
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
     @PutMapping(value = "/{dealId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Deal updateDeal(@PathVariable ObjectId dealId, @Valid @RequestPart Deal updatedDeal,@RequestParam("imageFile") MultipartFile imageFile) {
+    public DealDto updateDeal(@PathVariable ObjectId dealId, @Valid @RequestPart Deal updatedDeal,@RequestParam("imageFile") MultipartFile imageFile) {
         try {
             return dealsService.updateDeal(dealId, updatedDeal,imageFile);
         } catch (DealException | ImageException dealException) {
@@ -107,7 +108,7 @@ public class DealsController {
             @ApiResponse(responseCode = "200", description = "Deals retrieved successfully"),
     })
     @GetMapping("/search")
-    public Page<Deal> searchDeals(@RequestParam String searchText,
+    public Page<DealDto> searchDeals(@RequestParam String searchText,
                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
 
