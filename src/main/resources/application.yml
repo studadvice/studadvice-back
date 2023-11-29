@@ -10,3 +10,9 @@ spring:
       pageable:
         default-page-size: 10
         default-page: 0
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwt-set-uri: https://www.googleapis.com/service_accounts/v1/jwk/securetoken%40system.gserviceaccount.com

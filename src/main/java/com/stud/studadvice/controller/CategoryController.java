@@ -113,15 +113,16 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{categoryId}/administrative-process")
-    public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId, @RequestParam(required = false) Integer minAge,
-                                                                            @RequestParam(required = false) Integer maxAge,
-                                                                            @RequestParam(required = false) List<String> nationalities,
-                                                                            @RequestParam(required = false) List<String> universities,
+    public Page<AdministrativeProcess> getAdministrativeProcessByCategoryId(@PathVariable ObjectId categoryId,
+                                                                            @RequestParam(required = false) Integer age,
+                                                                            @RequestParam(required = false) String nationality,
+                                                                            @RequestParam(required = false) String university,
+                                                                            @RequestParam(required = false) String education,
                                                                             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
                                                                             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
         Pageable pageable = PageRequest.of(page, size);
         try {
-            return categoryService.getAdministrativeProcessByCategoryId(categoryId, minAge, maxAge,nationalities,universities,pageable);
+            return categoryService.getAdministrativeProcessByCategoryId(categoryId, age,nationality, university, education,pageable);
         }
         catch (CategoryException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
