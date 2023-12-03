@@ -33,7 +33,7 @@
 									"key": "imageFile",
 									"contentType": "application/octet-stream",
 									"type": "file",
-									"src": "/Users/nadazine/Desktop/nasa.png"
+									"src": "/Users/nadazine/Desktop/logoArcep.png"
 								},
 								{
 									"key": "administrativeProcess",
@@ -53,13 +53,21 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"Example Process updated\",\n  \"description\": \"An example administrative process\",\n  \"image\": \"example-image.jpg\",\n  \"minAge\": 18,\n  \"maxAge\": 25,\n  \"nationalities\": [\"CountryA\", \"CountryB\"],\n  \"universities\": [\"UniversityX\", \"UniversityY\"],\n  \"steps\": [\n    {\n      \"name\": \"name\",\n      \"stepNumber\": 1,\n      \"description\": \"Submit Application\",\n      \"requiredDocuments\":[{\"id\":\"65625b166aab9a380145f35e\"}]\n    },\n    {\n      \"name\": \"name\",\n      \"stepNumber\": 2,\n      \"description\": \"Review Application\"\n    }\n  ],\n  \"resources\": [\n    {\n      \"resourceType\": \"Form\",\n      \"resourceLink\": \"https://example.com/form.pdf\"\n    },\n    {\n      \"resourceType\": \"Guide\",\n      \"resourceLink\": \"https://example.com/guide.pdf\"\n    }\n  ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "administrativeProcess",
+									"value": "{\n  \"name\": \"Example Process updated\",\n  \"description\": \"An example administrative process\",\n  \"image\": \"example-image.jpg\",\n  \"minAge\": 18,\n  \"maxAge\": 25,\n  \"nationalities\": [\"CountryA\", \"CountryB\"],\n  \"universities\": [\"UniversityX\", \"UniversityY\"],\n  \"steps\": [\n    {\n      \"name\": \"name\",\n      \"stepNumber\": 1,\n      \"description\": \"Submit Application\"\n    },\n    {\n      \"name\": \"name\",\n      \"stepNumber\": 2,\n      \"description\": \"Review Application\"\n    }\n  ],\n  \"resources\": [\n    {\n      \"resourceType\": \"Form\",\n      \"resourceLink\": \"https://example.com/form.pdf\"\n    },\n    {\n      \"resourceType\": \"Guide\",\n      \"resourceLink\": \"https://example.com/guide.pdf\"\n    }\n  ]\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "imageFile",
+									"contentType": "application/octet-stream",
+									"type": "file",
+									"src": "/Users/nadazine/Desktop/ademe.jpg.webp"
 								}
-							}
+							]
 						},
 						"url": "{{base-url}}/administrative-process/{{administrative-process-id}}"
 					},
@@ -127,13 +135,21 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\": \"Offre spéciale\",\n    \"description\": \"Profitez de cette offre spéciale pour économiser sur votre prochain achat.\",\n    \"category\": \"Promotions\",\n    \"image\": \"https://example.com/deal-image.jpg\",\n    \"startDate\": \"2023-11-01\",\n    \"endDate\": \"2023-11-30\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "deal",
+									"value": "{\n    \"title\": \"Offre spéciale\",\n    \"description\": \"Profitez de cette offre spéciale pour économiser sur votre prochain achat.\",\n    \"category\": \"Promotions\",\n    \"startDate\": \"2023-11-01\",\n    \"endDate\": \"2023-11-30\"\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "imageFile",
+									"contentType": "application/octet-stream",
+									"type": "file",
+									"src": "/Users/nadazine/Desktop/332535-pollution-numerique-attention-effet-triple-sur-quinze-ans-web-tete-0602099641821.jpg"
 								}
-							}
+							]
 						},
 						"url": "{{base-url}}/deals"
 					},
@@ -145,13 +161,21 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\": \"Offre spéciale modifiée\",\n    \"description\": \"Profitez de cette offre spéciale pour économiser sur votre prochain achat.\",\n    \"category\": \"Promotions\",\n    \"image\": \"https://example.com/deal-image.jpg\",\n    \"startDate\": \"2023-11-01\",\n    \"endDate\": \"2023-11-30\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "deal",
+									"value": "{\n    \"title\": \"Offre spéciale\",\n    \"description\": \"Profitez de cette offre spéciale pour économiser sur votre prochain achat.\",\n    \"category\": \"Promotions\",\n    \"startDate\": \"2023-11-01\",\n    \"endDate\": \"2023-11-30\"\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "imageFile",
+									"contentType": "application/octet-stream",
+									"type": "file",
+									"src": "/Users/nadazine/Desktop/ademe.jpg.webp"
 								}
-							}
+							]
 						},
 						"url": "{{base-url}}/deals/{{deal-id}}"
 					},
@@ -228,13 +252,21 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"transport\",\n    \"description\": \"toto\",\n    \"image\": \"https://example.com/tansport.png\",\n    \"administrativeProcesses\":[{\"id\":\"6561bfc97d8ab95841717348\"}]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category",
+									"value": "{\n    \"name\": \"santé\",\n    \"description\": \"toto\",\n    \"administrativeProcesses\":[{\"id\":\"6565bbe2e732527fb912efa9\"}]\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "imageFile",
+									"contentType": "application/octet-stream",
+									"type": "file",
+									"src": "/Users/nadazine/Desktop/332535-pollution-numerique-attention-effet-triple-sur-quinze-ans-web-tete-0602099641821.jpg"
 								}
-							}
+							]
 						},
 						"url": "{{base-url}}/categories/{{category-id}}"
 					},
@@ -338,7 +370,7 @@
 									"key": "imageFile",
 									"contentType": "application/octet-stream",
 									"type": "file",
-									"src": "/Users/nadazine/Desktop/nasa.png"
+									"src": "/Users/nadazine/Desktop/ademe.jpg.webp"
 								},
 								{
 									"key": "requiredDocument",
@@ -367,13 +399,21 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Titre du document 1 UPDATE\",\n    \"description\": \"Description du document 1\",\n    \"image\": \"image5.png\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "requiredDocument",
+									"value": "{\n    \"name\": \"Titre du document 1\",\n    \"description\": \"Description du document 1\",\n    \"image\": \"image5.png\"\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "imageFile",
+									"contentType": "application/octet-stream",
+									"type": "file",
+									"src": "/Users/nadazine/Desktop/logo-FST.png"
 								}
-							}
+							]
 						},
 						"url": "{{base-url}}/required-document/{{requiredDocument-id}}"
 					},
@@ -418,7 +458,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"nadine.zine.7@gmail.com\",\n    \"password\": \"testnadine!\",\n    \"returnSecureToken\": true\n}",
+							"raw": "{\n    \"email\": \"nadine.zine.7@gmail.com\",\n    \"password\": \"Nadatest7\",\n    \"returnSecureToken\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -454,7 +494,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    \"ADMIN\"\n]\n",
+							"raw": "[\n    \"USER\"\n]\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -482,6 +522,12 @@
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vc3R1ZGFkdmljZS1hdXRoIiwiYXVkIjoic3R1ZGFkdmljZS1hdXRoIiwiYXV0aF90aW1lIjoxNzAxNTMxODU1LCJ1c2VyX2lkIjoiSFJnUnJpdWVmOVd1dHBsbGFNMUhmcnZTQXFFMiIsInN1YiI6IkhSZ1JyaXVlZjlXdXRwbGxhTTFIZnJ2U0FxRTIiLCJpYXQiOjE3MDE1MzE4NTUsImV4cCI6MTcwMTUzNTQ1NSwiZW1haWwiOiJuYWRpbmUuemluZS43QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJuYWRpbmUuemluZS43QGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.K6aAB8EGLDbwvuFJDgc_NQ2JWKrKwlLFP5fCOnWL8lAAODePlf1sl3ZrSWaN4JGT_0CEL54CrHdxpyvNPBVqjQa9L3DRn0_lqla6xZvJH8sEThVs9rCaI7zl4mE6J74_M9trvw5TsCwOqOBKvzp95DJzu0OEL_bnMee-Zc1zzgGtKXLhP1YuGmzzZ9bSRPWUkbol02zYEMqhjIkJQtVSe7Mu7Ll9Qg_lglSdemat0RLyItvghLaX59K4z0GS09zc_46aIsnZeTvyCwvebAB1kQFjzS3G9o1NRX53nJPEA2qo_gIBPW2VcG677SuGpX1_7GYTdO8RLvhVoFX0qKSjsw"
+		}
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -530,7 +576,7 @@
 		},
 		{
 			"key": "administrative-process-id",
-			"value": "65625b806aab9a380145f360",
+			"value": "6565bbe2e732527fb912efa9",
 			"type": "string"
 		},
 		{
