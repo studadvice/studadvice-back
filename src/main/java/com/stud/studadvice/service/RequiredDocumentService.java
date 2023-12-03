@@ -42,7 +42,7 @@ public class RequiredDocumentService {
     private RequiredDocumentRepository requiredDocumentRepository;
 
     @Autowired
-    private ModelMapper modelMapper;  // Add ModelMapper bean in your configuration
+    private ModelMapper modelMapper;
 
     public Page<RequiredDocumentDto> getRequiredDocuments(Pageable pageable) {
         Page<RequiredDocument> requiredDocuments = requiredDocumentRepository.findAll(pageable);
@@ -55,9 +55,7 @@ public class RequiredDocumentService {
         return modelMapper.map(requiredDocument, RequiredDocumentDto.class);
     }
 
-    public RequiredDocumentDto createRequiredDocument(RequiredDocumentDto requiredDocumentDto, MultipartFile imageFile) throws ImageException {
-        RequiredDocument requiredDocument = modelMapper.map(requiredDocumentDto, RequiredDocument.class);
-
+    public RequiredDocumentDto createRequiredDocument(RequiredDocument requiredDocument, MultipartFile imageFile) throws ImageException {
         if (imageFile != null) {
             try {
                 String imageId = storeImage(imageFile);
@@ -71,11 +69,9 @@ public class RequiredDocumentService {
         return modelMapper.map(savedDocument, RequiredDocumentDto.class);
     }
 
-    public RequiredDocumentDto updateRequiredDocument(ObjectId id, RequiredDocumentDto requiredDocumentDto, MultipartFile imageFile) throws RequiredDocumentException, ImageException {
+    public RequiredDocumentDto updateRequiredDocument(ObjectId id, RequiredDocument requiredDocument, MultipartFile imageFile) throws RequiredDocumentException, ImageException {
         RequiredDocument existingDocument = requiredDocumentRepository.findById(id)
                 .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
-
-        modelMapper.map(requiredDocumentDto, existingDocument);
 
         if (imageFile != null) {
             try {

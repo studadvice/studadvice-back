@@ -1,6 +1,7 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.dto.RequiredDocumentDto;
+import com.stud.studadvice.entity.RequiredDocument;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.exception.RequiredDocumentException;
 import com.stud.studadvice.entity.RequiredDocument;
@@ -15,6 +16,7 @@ import jakarta.validation.Valid;
 
 import org.bson.types.ObjectId;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/required-document")
 public class RequiredDocumentController {
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private RequiredDocumentService requiredDocumentService;
@@ -62,9 +66,10 @@ public class RequiredDocumentController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public RequiredDocumentDto createRequiredDocument(@Valid @RequestPart RequiredDocumentDto requiredDocumentDto, @Nullable @RequestParam("imageFile") MultipartFile imageFile) {
+    public RequiredDocumentDto createRequiredDocument(@Valid @RequestPart RequiredDocumentDto requiredDocument, @Nullable @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return requiredDocumentService.createRequiredDocument(requiredDocumentDto, imageFile);
+            RequiredDocument requiredDocumentToCreate = modelMapper.map(requiredDocument, RequiredDocument.class);
+            return requiredDocumentService.createRequiredDocument(requiredDocumentToCreate, imageFile);
         } catch (ImageException imageException) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, imageException.getMessage(), imageException);
         }
@@ -76,9 +81,10 @@ public class RequiredDocumentController {
             @ApiResponse(responseCode = "404", description = "Required document not found"),
     })
     @PutMapping(value = "/{requiredDocumentId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public RequiredDocumentDto updateRequiredDocument(@PathVariable ObjectId requiredDocumentId, @Valid @RequestPart RequiredDocumentDto updatedDocumentDto, @Nullable @RequestParam("imageFile") MultipartFile imageFile) {
+    public RequiredDocumentDto updateRequiredDocument(@PathVariable ObjectId requiredDocumentId, @Valid @RequestPart RequiredDocumentDto requiredDocument, @Nullable @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            return requiredDocumentService.updateRequiredDocument(requiredDocumentId, updatedDocumentDto, imageFile);
+            RequiredDocument requiredDocumentToUpdate = modelMapper.map(requiredDocument, RequiredDocument.class);
+            return requiredDocumentService.updateRequiredDocument(requiredDocumentId, requiredDocumentToUpdate, imageFile);
         } catch (RequiredDocumentException | ImageException requiredDocumentException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, requiredDocumentException.getMessage(), requiredDocumentException);
         }
