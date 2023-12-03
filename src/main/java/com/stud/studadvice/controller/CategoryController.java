@@ -71,10 +71,10 @@ public class CategoryController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public CategoryDto createCategory(@Valid @RequestPart CategoryDto categoryDto, @RequestParam("imageFile") MultipartFile imageFile) {
+    public CategoryDto createCategory(@Valid @RequestPart CategoryDto category, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            Category category = modelMapper.map(categoryDto, Category.class);
-            return categoryService.createCategory(category, imageFile);
+            Category categoryToCreate = modelMapper.map(category, Category.class);
+            return categoryService.createCategory(categoryToCreate, imageFile);
         } catch (AdministrativeProcessException | ImageException administrativeProcessException) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, administrativeProcessException.getMessage(), administrativeProcessException);
         }
@@ -87,10 +87,10 @@ public class CategoryController {
     })
     @PutMapping(value = "/{categoryId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public CategoryDto updateCategoryById(@PathVariable ObjectId categoryId, @Valid @RequestPart CategoryDto categoryDto, @RequestParam("imageFile") MultipartFile imageFile) {
+    public CategoryDto updateCategoryById(@PathVariable ObjectId categoryId, @Valid @RequestPart CategoryDto category, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            Category category = modelMapper.map(categoryDto, Category.class);
-            return categoryService.updateCategoryById(categoryId, category, imageFile);
+            Category categoryUpdated = modelMapper.map(category, Category.class);
+            return categoryService.updateCategoryById(categoryId, categoryUpdated, imageFile);
         } catch (CategoryException | AdministrativeProcessException | ImageException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
         }

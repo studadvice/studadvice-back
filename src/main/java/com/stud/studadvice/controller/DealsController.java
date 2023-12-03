@@ -1,6 +1,7 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.dto.DealDto;
+import com.stud.studadvice.entity.AdministrativeProcess;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.Deal;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/deals")
 public class DealsController {
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private DealsService dealsService;
@@ -65,8 +69,9 @@ public class DealsController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public DealDto createDeal(@Valid @RequestPart Deal newDeal,@RequestParam("imageFile") MultipartFile imageFile) {
+    public DealDto createDeal(@Valid @RequestPart DealDto deal,@RequestParam("imageFile") MultipartFile imageFile) {
         try{
+            Deal newDeal = modelMapper.map(deal, Deal.class);
             return dealsService.createDeal(newDeal,imageFile);
         }
         catch (ImageException imageException){
@@ -80,8 +85,9 @@ public class DealsController {
             @ApiResponse(responseCode = "404", description = "Student deal not found"),
     })
     @PutMapping(value = "/{dealId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE)
-    public DealDto updateDeal(@PathVariable ObjectId dealId, @Valid @RequestPart Deal updatedDeal,@RequestParam("imageFile") MultipartFile imageFile) {
+    public DealDto updateDeal(@PathVariable ObjectId dealId, @Valid @RequestPart DealDto deal,@RequestParam("imageFile") MultipartFile imageFile) {
         try {
+            Deal updatedDeal = modelMapper.map(deal, Deal.class);
             return dealsService.updateDeal(dealId, updatedDeal,imageFile);
         } catch (DealException | ImageException dealException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);

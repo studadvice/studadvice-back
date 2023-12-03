@@ -57,10 +57,10 @@ public class AdministrativeProcessController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcessDto createAdministrativeProcess(@Valid @RequestPart("administrativeProcess") AdministrativeProcessDto administrativeProcessDto, @RequestParam("imageFile") MultipartFile imageFile) {
+    public AdministrativeProcessDto createAdministrativeProcess(@Valid @RequestPart("administrativeProcess") AdministrativeProcessDto administrativeProcess, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            AdministrativeProcess administrativeProcess = modelMapper.map(administrativeProcessDto, AdministrativeProcess.class);
-            return administrativeProcessService.createAdministrativeProcess(administrativeProcess, imageFile);
+            AdministrativeProcess administrativeProcessToCreate = modelMapper.map(administrativeProcess, AdministrativeProcess.class);
+            return administrativeProcessService.createAdministrativeProcess(administrativeProcessToCreate, imageFile);
         } catch (AdministrativeProcessException | ImageException administrativeProcessException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
         }
@@ -73,9 +73,9 @@ public class AdministrativeProcessController {
     })
     @PutMapping(value = "/{administrativeProcessId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AdministrativeProcessDto updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestPart AdministrativeProcessDto updatedProcessDto, @RequestParam("imageFile") MultipartFile imageFile) {
+    public AdministrativeProcessDto updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestPart AdministrativeProcessDto administrativeProcess, @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            AdministrativeProcess updatedProcess = modelMapper.map(updatedProcessDto, AdministrativeProcess.class);
+            AdministrativeProcess updatedProcess = modelMapper.map(administrativeProcess, AdministrativeProcess.class);
             return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId, updatedProcess, imageFile);
         } catch (AdministrativeProcessException | ImageException administrativeProcessException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, administrativeProcessException.getMessage(), administrativeProcessException);
