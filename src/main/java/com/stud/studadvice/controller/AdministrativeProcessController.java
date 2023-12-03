@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -47,6 +48,7 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AdministrativeProcess createAdministrativeProcess(@Valid @RequestBody AdministrativeProcess administrativeProcess) {
         try {
             return administrativeProcessService.createAdministrativeProcess(administrativeProcess);
@@ -62,6 +64,7 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
     @PutMapping("/{administrativeProcessId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AdministrativeProcess updateAdministrativeProcess(@PathVariable ObjectId administrativeProcessId, @Valid @RequestBody AdministrativeProcess updatedProcess) {
         try {
             return administrativeProcessService.updateAdministrativeProcess(administrativeProcessId,updatedProcess);
@@ -77,6 +80,7 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "404", description = "Administrative process not found"),
     })
     @DeleteMapping("/{administrativeProcessId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteAdministrativeProcess(@PathVariable ObjectId administrativeProcessId) {
         try{
             administrativeProcessService.deleteAdministrativeProcess(administrativeProcessId);

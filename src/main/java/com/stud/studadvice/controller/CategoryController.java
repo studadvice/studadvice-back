@@ -11,8 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-import jakarta.validation.Valid;
-
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -63,7 +64,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input"),
     })
     @PostMapping
-    public Category createCategory(@Valid @RequestBody Category category) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Category createCategory(@RequestBody Category category) {
         try {
             return categoryService.createCategory(category);
         }
@@ -78,7 +80,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @PutMapping("/{categoryId}")
-    public Category updateCategoryById(@PathVariable ObjectId categoryId, @Valid @RequestBody Category category) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Category updateCategoryById(@PathVariable ObjectId categoryId, @RequestBody Category category) {
         try{
             return categoryService.updateCategoryById(categoryId, category);
         }
@@ -96,6 +99,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @DeleteMapping("/{categoryId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteCategoryById(@PathVariable ObjectId categoryId) {
         try {
             categoryService.deleteCategoryById(categoryId);
@@ -126,6 +130,7 @@ public class CategoryController {
     }
 
     @PostMapping("/{categoryId})")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Category addAdministrativeProcessToAnExistingCategory(@PathVariable ObjectId categoryId,@RequestParam ObjectId administrativeProcessId){
         try {
             return categoryService.addAdministrativeProcessToAnExistingCategory(categoryId,administrativeProcessId);
