@@ -16,12 +16,17 @@ COPY ${FIREBASE_CONFIG_PATH} /app/firebase-config.json
 # Utilisez ENV pour définir la variable d'environnement après le COPY
 ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-config.json
 
-RUN mvn install
+RUN mvn install -DskipTests
 
 # Etape de Build Final
 FROM openjdk:17
 
 COPY --from=build /app/target/studadvice-0.0.1-SNAPSHOT.jar /app/studadvice-0.0.1-SNAPSHOT.jar
+
+# Copiez le fichier de configuration Firebase dans le conteneur
+COPY --from=build /app/firebase-config.json /app/firebase-config.json
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-config.json
 
 WORKDIR /app
 
