@@ -2,7 +2,7 @@ package com.stud.studadvice.controller;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.stud.studadvice.service.UserManagementService;
-import com.stud.studadvice.model.security.Authority;
+import com.stud.studadvice.dto.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

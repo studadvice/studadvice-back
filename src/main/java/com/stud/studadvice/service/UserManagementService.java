@@ -2,7 +2,7 @@ package com.stud.studadvice.service;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.stud.studadvice.model.security.Authority;
+import com.stud.studadvice.dto.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -16,25 +16,14 @@ import java.time.Duration;
 
 @Configuration
 public class FirebaseAuthConfig {
+        @Bean
+        public FirebaseAuth firebaseAuth() throws IOException {
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.getApplicationDefault())
+                    .build();
 
-    @Bean
-    public FirebaseAuth firebaseAuth() throws IOException {
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.getApplicationDefault())
-                .build();
-
-        if (FirebaseApp.getApps().isEmpty()) {
-            // solve FirebaseApp name [DEFAULT] already exists!
             FirebaseApp.initializeApp(options);
+
+            return FirebaseAuth.getInstance();
         }
-
-        return FirebaseAuth.getInstance();
-    }
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        String jwkUri = "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";
-        return NimbusJwtDecoder.withJwkSetUri(jwkUri)
-                .build();
-    }
-
 }
