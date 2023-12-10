@@ -1,13 +1,9 @@
 name: 'Setup Common Environment'
 description: 'Setup common environment variables for Firebase and Maven'
-inputs:
-  firebase-config-base64:
-    description: 'Base64 encoded Firebase config'
-    required: true
 runs:
   using: 'composite'
   steps:
-    - run: echo "${{ inputs.firebase-config-base64 }}" | base64 -d > ${{ github.workspace }}/firebase-config.json
+    - run: echo "${{ secrets.FIREBASE_CONFIG_BASE64 }}" | base64 -d > ${{ github.workspace }}/firebase-config.json
       shell: bash
     - run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/firebase-config.json" >> $GITHUB_ENV
       shell: bash
