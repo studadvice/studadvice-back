@@ -22,6 +22,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            echo ${{ secrets.PASSWORD }} | sudo -S docker pull ghcr.io/${{ github.repository_owner }}/studadvice:latest
-            echo ${{ secrets.PASSWORD }} | sudo -S docker stack deploy --compose-file docker-compose.yml back_dev
-            echo ${{ secrets.PASSWORD }} | sudo docker service update --image ghcr.io/studadvice/studadvice --force back_dev_studadvice-back
+            scp deploy/setup.sh ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/setup.sh
+            scp docker/docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/docker-compose.yml
+            echo ${{ secrets.PASSWORD }} | sudo -S docker stack deploy --compose-file /tmp/docker-compose.yml studadvice

@@ -22,7 +22,9 @@ public class FirebaseAuthConfig {
                     .setCredentials(GoogleCredentials.getApplicationDefault())
                     .build();
 
-            FirebaseApp.initializeApp(options);
+            if (FirebaseApp.getApps().isEmpty()){
+                FirebaseApp.initializeApp(options);
+            }
 
             return FirebaseAuth.getInstance();
         }
