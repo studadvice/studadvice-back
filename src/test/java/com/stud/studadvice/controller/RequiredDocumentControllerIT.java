@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RequiredDocumentControllerIntegrationTest {
+public class RequiredDocumentControllerIT {
 
     @Autowired
     private MockMvc mockMvc;

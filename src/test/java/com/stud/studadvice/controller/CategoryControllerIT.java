@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CategoryControllerIntegrationTest {
+public class CategoryControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
