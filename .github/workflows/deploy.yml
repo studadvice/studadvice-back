@@ -21,8 +21,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          password: ${{ secrets.PASSWORD }}
           debug: true
           script: |
-            whoami
-            ls -al
+            echo ${{ secrets.PASSWORD }} | sudo -S docker stack deploy --compose-file docker-compose.yml studadvice
