@@ -20,8 +20,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          PASSWORD: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           debug: true
           script: |
             scp deploy/setup.sh ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/setup.sh
