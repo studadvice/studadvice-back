@@ -1,4 +1,4 @@
-name: Deploy to Azure VPS
+name: Deploy to VPS
 
 on:
   workflow_run:
@@ -20,7 +20,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           script: |
             scp deploy/setup.sh ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/setup.sh
