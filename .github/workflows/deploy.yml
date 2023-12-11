@@ -23,6 +23,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           debug: true
           script: |
-            scp deploy/setup.sh ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/setup.sh
-            scp docker/docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/docker-compose.yml
-            echo ${{ secrets.PASSWORD }} | sudo -S docker stack deploy --compose-file /tmp/docker-compose.yml studadvice
+#            scp deploy/setup.sh ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/setup.sh
+#            scp docker/docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/docker-compose.yml
+#            echo ${{ secrets.PASSWORD }} | sudo -S docker stack deploy --compose-file /tmp/docker-compose.yml studadvice
+             whoami
