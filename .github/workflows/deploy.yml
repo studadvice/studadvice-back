@@ -21,7 +21,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           debug: true
           script: |
             scp deploy/setup.sh ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/setup.sh
