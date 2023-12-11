@@ -103,9 +103,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-common-env
-
-      - name: Decode Firebase Config File
-        run: echo "${{ secrets.FIREBASE_CONFIG_BASE64 }}" | base64 -d > firebase-config.json
+        with:
+          firebase-config-base64: ${{ secrets.FIREBASE_CONFIG_BASE64 }}
 
       - name: Build Image Docker
         run: |
