@@ -32,7 +32,6 @@ import org.springframework.web.server.ResponseStatusException;
  */
 @RestController
 @RequestMapping("/deals")
-@CrossOrigin(origins = "http://localhost:4200")
 public class DealsController {
     @Autowired
     private ModelMapper modelMapper;
