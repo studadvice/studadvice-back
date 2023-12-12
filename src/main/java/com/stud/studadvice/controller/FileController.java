@@ -1,11 +1,9 @@
 package com.stud.studadvice.controller;
 
+import com.stud.studadvice.dto.FileDownloadResponse;
 import com.stud.studadvice.dto.FileDto;
 import com.stud.studadvice.service.FileService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,23 +16,26 @@ import java.io.IOException;
 
 @RestController
 public class FileController {
+
     @Autowired
     private FileService imageService;
 
     @GetMapping("/download/{imageId}")
-    public ResponseEntity<ByteArrayResource> download(@PathVariable String imageId){
+    public ResponseEntity<FileDownloadResponse> download(@PathVariable String imageId) {
         try {
             FileDto file = imageService.download(imageId);
             if (imageService.checkFile(file)) {
+                FileDownloadResponse fileDownloadResponse = new FileDownloadResponse();
+                fileDownloadResponse.setFilename(file.getFilename());
+                fileDownloadResponse.setFileContent(file.getFile());
+                fileDownloadResponse.setSize(file.getFileSize());
                 return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType(file.getFileType()))
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                        .body(new ByteArrayResource(file.getFile()));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(fileDownloadResponse);
             } else {
-                return null;
+                return ResponseEntity.notFound().build();
             }
-        }
-        catch (IOException ioException){
+        } catch (IOException ioException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ioException.getMessage(), ioException);
         }
     }
