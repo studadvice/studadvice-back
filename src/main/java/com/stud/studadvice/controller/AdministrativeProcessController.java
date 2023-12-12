@@ -1,6 +1,7 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.dto.AdministrativeProcessDto;
+import com.stud.studadvice.dto.CategoryDto;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.AdministrativeProcess;
@@ -122,10 +123,8 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
     @GetMapping("/search")
-    public Page<AdministrativeProcessDto> searchAdministrativeProcess(@RequestParam String searchText,
-                                                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
-                                                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
-
+    public Page<CategoryDto> searchAdministrativeProcess(@RequestParam String searchText,
+                                                         @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page, @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
         Pageable pageable = PageRequest.of(page, size);
         return administrativeProcessService.searchAdministrativeProcess(searchText,pageable);
     }

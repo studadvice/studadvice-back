@@ -3,6 +3,8 @@ package com.stud.studadvice.service;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 
 import com.stud.studadvice.dto.AdministrativeProcessDto;
+import com.stud.studadvice.dto.CategoryDto;
+import com.stud.studadvice.entity.Category;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.AdministrativeProcess;
@@ -11,6 +13,7 @@ import com.stud.studadvice.entity.Step;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
+import com.stud.studadvice.repository.categories.CategoryRepository;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -27,8 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +45,8 @@ public class AdministrativeProcessService {
     private AdministrativeProcessRepository administrativeProcessRepository;
     @Autowired
     private GridFsTemplate gridFsTemplate;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public AdministrativeProcessDto getAdministrativeProcessById(ObjectId administrativeProcessId) throws AdministrativeProcessException {
         AdministrativeProcess administrativeProcess = administrativeProcessRepository.findById(administrativeProcessId)
@@ -152,7 +156,7 @@ public class AdministrativeProcessService {
     }
 
 
-    public Page<AdministrativeProcessDto> searchAdministrativeProcess(String searchText, Pageable pageable) {
+    public Page<CategoryDto> searchAdministrativeProcess(String searchText, Pageable pageable) {
         TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
 
         Query query = TextQuery.queryText(criteria).sortByScore();
@@ -162,9 +166,17 @@ public class AdministrativeProcessService {
 
         List<AdministrativeProcess> processes = mongoTemplate.find(query, AdministrativeProcess.class);
 
-        List<AdministrativeProcessDto> dtos = processes.stream()
-                .map(process -> modelMapper.map(process, AdministrativeProcessDto.class))
-                .collect(Collectors.toList());
+        List<CategoryDto> dtos = new ArrayList<>();
+
+        for (AdministrativeProcess administrativeProcess : processes) {
+            Query categoryQuery = new Query(Criteria.where("administrativeProcesses").is(administrativeProcess.getId()));
+            Optional<Category> category = Optional.ofNullable(mongoTemplate.findOne(categoryQuery, Category.class));
+
+            category.ifPresent(cat -> {
+                CategoryDto dto = modelMapper.map(cat, CategoryDto.class);
+                dtos.add(dto);
+            });
+        }
 
         return PageableExecutionUtils.getPage(dtos, pageable, () -> total);
     }

@@ -1,8 +1,5 @@
 package com.stud.studadvice.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-
 import jakarta.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -21,13 +18,15 @@ import java.util.List;
 @Document
 public class Category {
     @Id
-    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     @NotNull(message = "Please, give a name for your category")
     private String name;
     @NotNull(message = "Please, give a description for your category")
     private String description;
+    @NotNull(message = "Please, give an image id for your category")
     private String imageId;
+    @NotNull(message = "Please, give a color for your category")
+    private String color;
     @DocumentReference
     private List<AdministrativeProcess> administrativeProcesses;
     public Category() {

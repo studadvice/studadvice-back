@@ -1,12 +1,6 @@
 package com.stud.studadvice.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-
 import jakarta.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +18,6 @@ import java.util.List;
 @Document
 public class AdministrativeProcess {
     @Id
-    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     @NotNull(message = "Please, give a name for your administrative process")
     @TextIndexed
@@ -32,6 +25,7 @@ public class AdministrativeProcess {
     @NotNull(message = "Please, give a description for your administrative process")
     @TextIndexed
     private String description;
+    @NotNull(message = "Please, give an image id for your administrative process")
     private String imageId;
     private List<String> educations;
     private Integer minAge;

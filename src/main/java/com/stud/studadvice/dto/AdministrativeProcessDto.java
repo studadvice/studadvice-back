@@ -2,6 +2,7 @@ package com.stud.studadvice.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.stud.studadvice.entity.Category;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class AdministrativeProcessDto {
     private String name;
     @NotNull(message = "Please, give a description for your administrative process")
     private String description;
+    @NotNull(message = "Please, give an image id for your administrative process")
     private String imageId;
     private List<String> educations;
     private Integer minAge;
@@ -25,6 +27,7 @@ public class AdministrativeProcessDto {
     private List<String> nationalities;
     private List<String> universities;
     private List<StepDto> steps;
+    private Category category;
 
     public AdministrativeProcessDto() {
     }
