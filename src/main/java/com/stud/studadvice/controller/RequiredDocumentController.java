@@ -30,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/required-document")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RequiredDocumentController {
     @Autowired
     private ModelMapper modelMapper;

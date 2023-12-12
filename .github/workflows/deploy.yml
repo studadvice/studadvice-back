@@ -24,5 +24,5 @@ jobs:
           debug: true
           script: |
             docker pull ghcr.io/${{ github.repository_owner }}/studadvice:latest
-            docker stack deploy --compose-file docker-compose.yml back_dev
+            docker stack deploy --compose-file docker-compose.yml studadvice
             docker service update --image ghcr.io/studadvice/studadvice --force studadvice_studadvice-back
