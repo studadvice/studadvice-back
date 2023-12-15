@@ -63,29 +63,32 @@ public class DealsService {
         }
     }
 
-    public DealDto updateDeal(ObjectId dealId, Deal updatedDeal, MultipartFile imageFile) throws DealException, ImageException {
-        Optional<Deal> existingDeal = dealsRepository.findById(dealId);
-        if (existingDeal.isPresent()) {
-            Deal dealToUpdate = existingDeal.get();
+    public DealDto updateDeal(ObjectId dealId, Deal updatedDeal, MultipartFile imageFile)
+            throws DealException, ImageException {
 
-            dealToUpdate.setTitle(updatedDeal.getTitle());
-            dealToUpdate.setDescription(updatedDeal.getDescription());
-            dealToUpdate.setCategory(updatedDeal.getCategory());
-            dealToUpdate.setStartDate(updatedDeal.getStartDate());
-            dealToUpdate.setEndDate(updatedDeal.getEndDate());
+        Deal dealToUpdate = dealsRepository.findById(dealId)
+                .orElseThrow(() -> new DealException("Student deal not found"));
 
-            try {
-                String imageId = storeImage(imageFile);
-                dealToUpdate.setImageId(imageId);
-                Deal updatedDealEntity = dealsRepository.save(dealToUpdate);
+        updateDealFields(dealToUpdate, updatedDeal);
 
-                return modelMapper.map(updatedDealEntity, DealDto.class);
-            } catch (IOException ioException) {
-                throw new ImageException("Error when storing the image");
-            }
-        } else {
-            throw new DealException("Student deal not found");
+        try {
+            String imageId = storeImage(imageFile);
+            dealToUpdate.setImageId(imageId);
+
+            Deal updatedDealEntity = dealsRepository.save(dealToUpdate);
+
+            return modelMapper.map(updatedDealEntity, DealDto.class);
+        } catch (IOException ioException) {
+            throw new ImageException("Error when storing the image");
         }
+    }
+
+    private void updateDealFields(Deal dealToUpdate, Deal updatedDeal) {
+        dealToUpdate.setTitle(updatedDeal.getTitle());
+        dealToUpdate.setDescription(updatedDeal.getDescription());
+        dealToUpdate.setCategory(updatedDeal.getCategory());
+        dealToUpdate.setStartDate(updatedDeal.getStartDate());
+        dealToUpdate.setEndDate(updatedDeal.getEndDate());
     }
 
     public void deleteDeal(ObjectId dealId) throws DealException {

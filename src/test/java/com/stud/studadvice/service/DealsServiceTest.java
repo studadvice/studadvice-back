@@ -3,23 +3,25 @@ package com.stud.studadvice.service;
 import com.stud.studadvice.dto.DealDto;
 import com.stud.studadvice.entity.Deal;
 import com.stud.studadvice.exception.DealException;
-import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.repository.deals.DealsRepository;
+
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import org.modelmapper.ModelMapper;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,88 +31,100 @@ import static org.mockito.Mockito.*;
 public class DealsServiceTest {
 
     @Mock
-    private GridFsTemplate gridFsTemplate;
-
-    @Mock
-    private DealsRepository dealsRepository;
+    private DealsRepository dealRepository;
 
     @Mock
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private DealsService dealsService;
+    private DealsService dealService;
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testGetDeals_ShouldReturnPage() {
-        // TODO
-    }
+        Pageable pageable = PageRequest.of(0, 10);
 
-    @Test
-    void testCreateDeal_ValidData_ShouldReturnDto() {
-        // TODO
-    }
+        List<Deal> deals = Collections.singletonList(new Deal());
+        Page<Deal> dealPage = new PageImpl<>(deals, pageable, deals.size());
 
-    @Test
-    void testCreateDeal_InvalidData_ShouldThrowException() {
-        // TODO
-    }
+        when(dealRepository.findAll(pageable)).thenReturn(dealPage);
 
-    @Test
-    void testUpdateDeal_ExistingIdAndValidData_ShouldReturnDto() {
-        // TODO
-    }
+        List<DealDto> dealDtos = Collections.singletonList(new DealDto());
+        when(modelMapper.map(any(), eq(DealDto.class))).thenReturn(dealDtos.get(0));
 
-    @Test
-    void testUpdateDeal_NonExistingId_ShouldThrowException() {
-        // TODO
-    }
+        Page<DealDto> result = dealService.getDeals(pageable);
 
-    @Test
-    void testUpdateDeal_InvalidData_ShouldThrowException() {
-        // TODO
+        assertNotNull(result);
+        assertEquals(dealDtos.size(), result.getContent().size());
+        assertEquals(dealPage.getTotalElements(), result.getTotalElements());
+
+        verify(dealRepository, times(1)).findAll(pageable);
+
+        verify(modelMapper, times(deals.size())).map(any(), eq(DealDto.class));
     }
 
     @Test
     void testDeleteDeal_ExistingId_ShouldNotThrowException() {
-        // TODO
+        ObjectId dealId = new ObjectId();
+
+        when(dealRepository.existsById(any())).thenReturn(true);
+
+        assertDoesNotThrow(() -> dealService.deleteDeal(dealId));
+
+        verify(dealRepository, times(1)).existsById(dealId);
+        verify(dealRepository, times(1)).deleteById(dealId);
     }
 
     @Test
     void testDeleteDeal_NonExistingId_ShouldThrowException() {
-        // TODO
+        ObjectId dealId = new ObjectId();
+
+        when(dealRepository.existsById(any())).thenReturn(false);
+
+        DealException exception = assertThrows(DealException.class,
+                () -> dealService.deleteDeal(dealId));
+
+        assertEquals("Student deal not found", exception.getMessage());
+
+        verify(dealRepository, times(1)).existsById(dealId);
+        verify(dealRepository, never()).deleteById(dealId);
     }
 
     @Test
-    void testGetDealById_ExistingId_ShouldReturnDto() {
-        // TODO
+    void testGetDealById_ExistingId_ShouldReturnDto() throws DealException {
+        ObjectId dealId = new ObjectId();
+        Deal deal = new Deal();
+        DealDto dealDto = new DealDto();
+
+        when(dealRepository.findById(dealId)).thenReturn(Optional.of(deal));
+        when(modelMapper.map(deal, DealDto.class)).thenReturn(dealDto);
+
+        DealDto resultDto = dealService.getDealById(dealId);
+
+        assertNotNull(resultDto);
+        assertSame(dealDto, resultDto);
+
+        verify(dealRepository, times(1)).findById(dealId);
+        verify(modelMapper, times(1)).map(deal, DealDto.class);
     }
 
     @Test
     void testGetDealById_NonExistingId_ShouldThrowException() {
-        // TODO
+        ObjectId dealId = new ObjectId();
+
+        when(dealRepository.findById(dealId)).thenReturn(Optional.empty());
+
+        DealException exception = assertThrows(DealException.class,
+                () -> dealService.getDealById(dealId));
+
+        assertEquals("Student deal not found", exception.getMessage());
+
+        verify(dealRepository, times(1)).findById(dealId);
+        verify(modelMapper, never()).map(any(), eq(DealDto.class));
     }
 
-    @Test
-    void testSearchDeals_WithSearchParams_ShouldReturnPage() {
-        // TODO
-    }
-
-    @Test
-    void testSearchDeals_WithNoSearchParams_ShouldReturnPage() {
-        // TODO
-    }
-
-    @Test
-    void testStoreImage_ValidImageFile_ShouldReturnImageId() {
-        // TODO
-    }
-
-    @Test
-    void testStoreImage_InvalidImageFile_ShouldThrowException() {
-        // TODO
-    }
 }
