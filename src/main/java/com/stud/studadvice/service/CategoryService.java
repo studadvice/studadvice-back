@@ -58,14 +58,11 @@ public class CategoryService {
 
         return modelMapper.map(category, CategoryDto.class);
     }
-    public CategoryDto createCategory(Category category, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
-        if (category.getAdministrativeProcesses() != null) {
-            for (AdministrativeProcess administrativeProcess : category.getAdministrativeProcesses()) {
-                if (administrativeProcessRepository.findById(administrativeProcess.getId()).isEmpty()) {
-                    throw new AdministrativeProcessException("Administrative process not found");
-                }
-            }
-        }
+
+    public CategoryDto createCategory(Category category, MultipartFile imageFile)
+            throws AdministrativeProcessException, ImageException {
+
+        validateAdministrativeProcesses(category);
 
         try {
             String imageId = storeImage(imageFile);
@@ -78,32 +75,43 @@ public class CategoryService {
         }
     }
 
-
-    public CategoryDto updateCategoryById(ObjectId categoryId, Category categoryUpdated, MultipartFile imageFile) throws CategoryException, AdministrativeProcessException, ImageException {
-        Category existingCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException("Category not found"));
-
-        if (categoryUpdated.getAdministrativeProcesses() != null) {
-            for (AdministrativeProcess administrativeProcess : categoryUpdated.getAdministrativeProcesses()) {
+    public void validateAdministrativeProcesses(Category category) throws AdministrativeProcessException {
+        if (category.getAdministrativeProcesses() != null) {
+            for (AdministrativeProcess administrativeProcess : category.getAdministrativeProcesses()) {
                 if (administrativeProcessRepository.findById(administrativeProcess.getId()).isEmpty()) {
                     throw new AdministrativeProcessException("Administrative process not found");
                 }
             }
         }
+    }
 
-        existingCategory.setDescription(categoryUpdated.getDescription());
-        existingCategory.setName(categoryUpdated.getName());
-        existingCategory.setAdministrativeProcesses(categoryUpdated.getAdministrativeProcesses());
+
+    public CategoryDto updateCategoryById(ObjectId categoryId, Category categoryUpdated, MultipartFile imageFile)
+            throws CategoryException, AdministrativeProcessException, ImageException {
+
+        Category existingCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException("Category not found"));;
+
+        validateAdministrativeProcesses(categoryUpdated);
+
+        updateCategoryFields(existingCategory, categoryUpdated);
 
         try {
             String imageId = storeImage(imageFile);
             existingCategory.setImageId(imageId);
+
             Category updatedCategory = categoryRepository.save(existingCategory);
 
             return modelMapper.map(updatedCategory, CategoryDto.class);
         } catch (IOException ioException) {
             throw new ImageException("Error when storing the image");
         }
+    }
+
+    private void updateCategoryFields(Category existingCategory, Category updatedCategory) {
+        existingCategory.setDescription(updatedCategory.getDescription());
+        existingCategory.setName(updatedCategory.getName());
+        existingCategory.setAdministrativeProcesses(updatedCategory.getAdministrativeProcesses());
     }
 
 
