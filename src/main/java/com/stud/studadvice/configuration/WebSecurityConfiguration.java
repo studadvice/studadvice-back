@@ -22,7 +22,7 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors().and()
+                .cors().and().csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(antMatcher("/swagger-ui.html"),
                                 antMatcher("/swagger-ui/**"),

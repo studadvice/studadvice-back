@@ -28,28 +28,28 @@ services:
     deploy:
       replicas: 2
 
-  studadvice-back:
-    image: studadvice
-    ports:
-      - "8080:8080"
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
-    environment:
-      SPRING_DATA_MONGODB_HOST: mongo
-      SPRING_DATA_MONGODB_PORT: 27017
 #  studadvice-back:
-#    image: ghcr.io/studadvice/studadvice
+#    image: studadvice
 #    ports:
 #      - "8080:8080"
-#    deploy:
-#      replicas: 3
 #    dns:
 #      - 8.8.8.8
 #      - 8.8.4.4
 #    environment:
 #      SPRING_DATA_MONGODB_HOST: mongo
 #      SPRING_DATA_MONGODB_PORT: 27017
+  studadvice-back:
+    image: ghcr.io/studadvice/studadvice
+    ports:
+      - "8080:8080"
+    deploy:
+      replicas: 3
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_PORT: 27017
 
   studadvice-backoffice:
     image: ghcr.io/studadvice/studadvice_backoffice
