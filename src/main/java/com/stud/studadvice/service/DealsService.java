@@ -1,14 +1,18 @@
 package com.stud.studadvice.service;
 
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
+
 import com.stud.studadvice.dto.DealDto;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.Deal;
 import com.stud.studadvice.repository.deals.DealsRepository;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
+
 import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,9 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

@@ -90,7 +90,7 @@ public class CategoryService {
             throws CategoryException, AdministrativeProcessException, ImageException {
 
         Category existingCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException("Category not found"));;
+                .orElseThrow(() -> new CategoryException("Category not found"));
 
         validateAdministrativeProcesses(categoryUpdated);
 
