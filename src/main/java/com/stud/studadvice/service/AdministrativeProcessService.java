@@ -13,7 +13,6 @@ import com.stud.studadvice.entity.Step;
 import com.stud.studadvice.repository.administrative.AdministrativeProcessRepository;
 import com.stud.studadvice.repository.administrative.RequiredDocumentRepository;
 
-import com.stud.studadvice.repository.categories.CategoryRepository;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -45,8 +44,6 @@ public class AdministrativeProcessService {
     private AdministrativeProcessRepository administrativeProcessRepository;
     @Autowired
     private GridFsTemplate gridFsTemplate;
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     public AdministrativeProcessDto getAdministrativeProcessById(ObjectId administrativeProcessId) throws AdministrativeProcessException {
         AdministrativeProcess administrativeProcess = administrativeProcessRepository.findById(administrativeProcessId)
@@ -54,47 +51,56 @@ public class AdministrativeProcessService {
         return modelMapper.map(administrativeProcess, AdministrativeProcessDto.class);
     }
 
-    public AdministrativeProcessDto createAdministrativeProcess(AdministrativeProcess administrativeProcess, MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
-        if(administrativeProcess.getSteps()!= null) {
-            for (Step step : administrativeProcess.getSteps()) {
-                if(step.getRequiredDocuments()!= null) {
-                    for (RequiredDocument requiredDocument : step.getRequiredDocuments()) {
-                        if (requiredDocumentRepository.findById(requiredDocument.getId()).isEmpty()) {
-                            throw new AdministrativeProcessException("Administrative process use a undefined required document. Please create it first");
-                        }
-                    }
-                }
-            }
-        }
+    public AdministrativeProcessDto createAdministrativeProcess(AdministrativeProcess administrativeProcess, MultipartFile imageFile)
+            throws AdministrativeProcessException, ImageException {
+        validateRequiredDocuments(administrativeProcess);
 
-        try{
+        try {
             String imageId = storeImage(imageFile);
             administrativeProcess.setImageId(imageId);
             AdministrativeProcess administrativeProcessCreated = administrativeProcessRepository.save(administrativeProcess);
             return modelMapper.map(administrativeProcessCreated, AdministrativeProcessDto.class);
-        }
-        catch (IOException ioException){
+        } catch (IOException ioException) {
             throw new ImageException("Error when storing the image");
         }
     }
 
-    public AdministrativeProcessDto updateAdministrativeProcess(ObjectId administrativeProcessId, AdministrativeProcess updatedProcess,MultipartFile imageFile) throws AdministrativeProcessException, ImageException {
-
-        AdministrativeProcess existingProcess = administrativeProcessRepository.findById(administrativeProcessId)
-                .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
-
-        if(updatedProcess.getSteps() != null) {
-            for (Step step : updatedProcess.getSteps()) {
-                if(step.getRequiredDocuments()!= null) {
+    void validateRequiredDocuments(AdministrativeProcess administrativeProcess) throws AdministrativeProcessException {
+        if (administrativeProcess.getSteps() != null) {
+            for (Step step : administrativeProcess.getSteps()) {
+                if (step.getRequiredDocuments() != null) {
                     for (RequiredDocument requiredDocument : step.getRequiredDocuments()) {
                         if (requiredDocumentRepository.findById(requiredDocument.getId()).isEmpty()) {
-                            throw new AdministrativeProcessException("Administrative process use a undefined required document. Please create it first");
+                            throw new AdministrativeProcessException("Administrative process uses an undefined required document. Please create it first");
                         }
                     }
                 }
             }
         }
+    }
 
+    public AdministrativeProcessDto updateAdministrativeProcess(ObjectId administrativeProcessId, AdministrativeProcess updatedProcess, MultipartFile imageFile)
+            throws AdministrativeProcessException, ImageException {
+
+        AdministrativeProcess existingProcess = administrativeProcessRepository.findById(administrativeProcessId)
+                .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
+
+        validateRequiredDocuments(updatedProcess);
+
+        updateProcessFields(existingProcess, updatedProcess);
+
+        try {
+            String imageId = storeImage(imageFile);
+            existingProcess.setImageId(imageId);
+
+            AdministrativeProcess administrativeProcessUpdated = administrativeProcessRepository.save(existingProcess);
+            return modelMapper.map(administrativeProcessUpdated, AdministrativeProcessDto.class);
+        } catch (IOException ioException) {
+            throw new ImageException("Error when storing the image");
+        }
+    }
+
+    private void updateProcessFields(AdministrativeProcess existingProcess, AdministrativeProcess updatedProcess) {
         existingProcess.setDescription(updatedProcess.getDescription());
         existingProcess.setMaxAge(updatedProcess.getMaxAge());
         existingProcess.setMinAge(updatedProcess.getMinAge());
@@ -102,16 +108,6 @@ public class AdministrativeProcessService {
         existingProcess.setUniversities(updatedProcess.getUniversities());
         existingProcess.setSteps(updatedProcess.getSteps());
         existingProcess.setName(updatedProcess.getName());
-
-        try{
-            String imageId = storeImage(imageFile);
-            existingProcess.setImageId(imageId);
-            AdministrativeProcess administrativeProcessUpdated = administrativeProcessRepository.save(existingProcess);
-            return modelMapper.map(administrativeProcessUpdated, AdministrativeProcessDto.class);
-        }
-        catch (IOException ioException){
-            throw new ImageException("Error when storing the image");
-        }
     }
 
     public void deleteAdministrativeProcess(ObjectId administrativeProcessId) throws AdministrativeProcessException {
