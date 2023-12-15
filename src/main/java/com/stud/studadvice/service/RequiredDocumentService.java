@@ -55,7 +55,29 @@ public class RequiredDocumentService {
         return modelMapper.map(requiredDocument, RequiredDocumentDto.class);
     }
 
-    public RequiredDocumentDto createRequiredDocument(RequiredDocument requiredDocument, MultipartFile imageFile) throws ImageException {
+    public RequiredDocumentDto createRequiredDocument(RequiredDocument requiredDocument, MultipartFile imageFile)
+            throws ImageException {
+        processImage(requiredDocument, imageFile);
+
+        RequiredDocument savedDocument = requiredDocumentRepository.save(requiredDocument);
+        return modelMapper.map(savedDocument, RequiredDocumentDto.class);
+    }
+
+    public RequiredDocumentDto updateRequiredDocument(ObjectId id, RequiredDocument requiredDocument, MultipartFile imageFile)
+            throws RequiredDocumentException, ImageException {
+        RequiredDocument existingDocument = requiredDocumentRepository.findById(id)
+                .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
+
+        existingDocument.setName(requiredDocument.getName());
+        existingDocument.setDescription(requiredDocument.getDescription());
+        existingDocument.setUrl(requiredDocument.getUrl());
+        processImage(existingDocument, imageFile);
+
+        RequiredDocument updatedDocument = requiredDocumentRepository.save(existingDocument);
+        return modelMapper.map(updatedDocument, RequiredDocumentDto.class);
+    }
+
+    private void processImage(RequiredDocument requiredDocument, MultipartFile imageFile) throws ImageException {
         if (imageFile != null) {
             try {
                 String imageId = storeImage(imageFile);
@@ -64,27 +86,8 @@ public class RequiredDocumentService {
                 throw new ImageException("Error when storing the image");
             }
         }
-
-        RequiredDocument savedDocument = requiredDocumentRepository.save(requiredDocument);
-        return modelMapper.map(savedDocument, RequiredDocumentDto.class);
     }
 
-    public RequiredDocumentDto updateRequiredDocument(ObjectId id, RequiredDocument requiredDocument, MultipartFile imageFile) throws RequiredDocumentException, ImageException {
-        RequiredDocument existingDocument = requiredDocumentRepository.findById(id)
-                .orElseThrow(() -> new RequiredDocumentException("Required document not found"));
-
-        if (imageFile != null) {
-            try {
-                String imageId = storeImage(imageFile);
-                existingDocument.setImageId(imageId);
-            } catch (IOException ioException) {
-                throw new ImageException("Error when storing the image");
-            }
-        }
-
-        RequiredDocument updatedDocument = requiredDocumentRepository.save(existingDocument);
-        return modelMapper.map(updatedDocument, RequiredDocumentDto.class);
-    }
 
     public void deleteRequiredDocument(ObjectId id) throws RequiredDocumentException {
         RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
