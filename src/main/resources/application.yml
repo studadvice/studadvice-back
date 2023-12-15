@@ -5,11 +5,16 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-#      database: Document
+      database: Document
     web:
       pageable:
         default-page-size: 10
         default-page: 0
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
 
   security:
     oauth2:
