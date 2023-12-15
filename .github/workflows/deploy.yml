@@ -20,9 +20,9 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.PASSWORD }}
           debug: true
           script: |
-            docker pull ghcr.io/${{ github.repository_owner }}/studadvice:latest
-            docker stack deploy --compose-file docker-compose.yml studadvice
-            docker service update --image ghcr.io/studadvice/studadvice --force studadvice_studadvice-back
+            sudo docker pull ghcr.io/${{ github.repository_owner }}/studadvice:latest
+            sudo docker stack deploy --compose-file docker-compose.yml studadvice
+            sudo docker service update --image ghcr.io/studadvice/studadvice --force studadvice_studadvice-back
