@@ -18,7 +18,6 @@ public class CategoryDto {
     private String name;
     @NotNull(message = "Please, give a description for your category")
     private String description;
-    @NotNull(message = "Please, give an image id for your category")
     private String imageId;
     @NotNull(message = "Please, give a color for your category")
     private String color;
