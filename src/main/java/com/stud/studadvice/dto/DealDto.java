@@ -17,7 +17,6 @@ public class DealDto {
     @NotNull(message = "Please, give a description to your deal")
     private String description;
     private String category;
-    @NotNull(message = "Please, give an image id for your deal")
     private String imageId;
     private String startDate;
     private String endDate;

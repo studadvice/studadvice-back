@@ -19,7 +19,6 @@ public class AdministrativeProcessDto {
     private String name;
     @NotNull(message = "Please, give a description for your administrative process")
     private String description;
-    @NotNull(message = "Please, give an image id for your administrative process")
     private String imageId;
     private List<String> educations;
     private Integer minAge;
