@@ -81,7 +81,7 @@ public class AdministrativeProcessServiceTest {
 
         when(requiredDocumentRepository.findById(any())).thenReturn(Optional.of(new RequiredDocument()));
 
-        assertDoesNotThrow(() -> administrativeProcessService.validateRequiredDocuments(administrativeProcess));
+        assertDoesNotThrow(() -> administrativeProcessService.validateAdministrativeProcessDocument(administrativeProcess));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class AdministrativeProcessServiceTest {
         when(requiredDocumentRepository.findById(any())).thenReturn(Optional.empty());
 
         AdministrativeProcessException exception = assertThrows(AdministrativeProcessException.class,
-                () -> administrativeProcessService.validateRequiredDocuments(administrativeProcess));
+                () -> administrativeProcessService.validateAdministrativeProcessDocument(administrativeProcess));
 
         assertEquals("Administrative process uses an undefined required document. Please create it first", exception.getMessage());
     }

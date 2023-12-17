@@ -4,7 +4,6 @@ import com.stud.studadvice.dto.RequiredDocumentDto;
 import com.stud.studadvice.entity.RequiredDocument;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.exception.RequiredDocumentException;
-import com.stud.studadvice.entity.RequiredDocument;
 import com.stud.studadvice.service.RequiredDocumentService;
 
 import io.swagger.v3.oas.annotations.Operation;
