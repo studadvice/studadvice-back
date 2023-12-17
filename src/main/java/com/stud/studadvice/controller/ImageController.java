@@ -2,23 +2,22 @@ package com.stud.studadvice.controller;
 
 import com.stud.studadvice.dto.FileDownloadResponse;
 import com.stud.studadvice.dto.FileDto;
-import com.stud.studadvice.service.FileService;
+import com.stud.studadvice.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
 @RestController
-public class FileController {
+public class ImageController {
 
     @Autowired
-    private FileService imageService;
+    private ImageService imageService;
 
     @GetMapping("/download/{imageId}")
     public ResponseEntity<FileDownloadResponse> download(@PathVariable String imageId) {
@@ -37,6 +36,16 @@ public class FileController {
             }
         } catch (IOException ioException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ioException.getMessage(), ioException);
+        }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> upload(@RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            String imageId = imageService.upload(imageFile);
+            return ResponseEntity.ok().body(imageId);
+        } catch (IOException ioException) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload the file", ioException);
         }
     }
 }
