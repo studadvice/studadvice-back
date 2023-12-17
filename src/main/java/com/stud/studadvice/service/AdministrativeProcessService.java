@@ -4,6 +4,7 @@ import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 
 import com.stud.studadvice.dto.AdministrativeProcessDto;
 import com.stud.studadvice.dto.CategoryDto;
+import com.stud.studadvice.dto.ResourceDto;
 import com.stud.studadvice.entity.Category;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.ImageException;
@@ -44,6 +45,8 @@ public class AdministrativeProcessService {
     private AdministrativeProcessRepository administrativeProcessRepository;
     @Autowired
     private GridFsTemplate gridFsTemplate;
+    @Autowired
+    private ImageService imageService;
 
     public AdministrativeProcessDto getAdministrativeProcessById(ObjectId administrativeProcessId) throws AdministrativeProcessException {
         AdministrativeProcess administrativeProcess = administrativeProcessRepository.findById(administrativeProcessId)
@@ -53,7 +56,7 @@ public class AdministrativeProcessService {
 
     public AdministrativeProcessDto createAdministrativeProcess(AdministrativeProcess administrativeProcess, MultipartFile imageFile)
             throws AdministrativeProcessException, ImageException {
-        validateRequiredDocuments(administrativeProcess);
+        validateAdministrativeProcessDocument(administrativeProcess);
 
         try {
             String imageId = storeImage(imageFile);
@@ -65,15 +68,38 @@ public class AdministrativeProcessService {
         }
     }
 
-    void validateRequiredDocuments(AdministrativeProcess administrativeProcess) throws AdministrativeProcessException {
-        if (administrativeProcess.getSteps() != null) {
+    void validateAdministrativeProcessDocument(AdministrativeProcess administrativeProcess) throws AdministrativeProcessException, ImageException {
+        if (administrativeProcess != null && administrativeProcess.getSteps() != null) {
             for (Step step : administrativeProcess.getSteps()) {
-                if (step.getRequiredDocuments() != null) {
-                    for (RequiredDocument requiredDocument : step.getRequiredDocuments()) {
-                        if (requiredDocumentRepository.findById(requiredDocument.getId()).isEmpty()) {
-                            throw new AdministrativeProcessException("Administrative process uses an undefined required document. Please create it first");
-                        }
-                    }
+                if (step.getImageId() != null) {
+                    imageService.checkImage(step.getImageId());
+                }
+
+                validateRequiredDocuments(step.getRequiredDocuments());
+                validateResourceDocuments(step.getResources());
+            }
+        }
+    }
+
+    private void validateRequiredDocuments(List<RequiredDocument> requiredDocuments) throws AdministrativeProcessException, ImageException {
+        if (requiredDocuments != null) {
+            for (RequiredDocument requiredDocument : requiredDocuments) {
+                if (requiredDocument.getImageId() != null) {
+                    imageService.checkImage(requiredDocument.getImageId());
+                }
+
+                if (requiredDocumentRepository.findById(requiredDocument.getId()).isEmpty()) {
+                    throw new AdministrativeProcessException("Administrative process uses an undefined required document. Please create it first");
+                }
+            }
+        }
+    }
+
+    private void validateResourceDocuments(List<ResourceDto> resourceDocuments) throws ImageException {
+        if (resourceDocuments != null) {
+            for (ResourceDto resource : resourceDocuments) {
+                if (resource.getImageId() != null) {
+                    imageService.checkImage(resource.getImageId());
                 }
             }
         }
@@ -85,7 +111,7 @@ public class AdministrativeProcessService {
         AdministrativeProcess existingProcess = administrativeProcessRepository.findById(administrativeProcessId)
                 .orElseThrow(() -> new AdministrativeProcessException("Administrative process not found"));
 
-        validateRequiredDocuments(updatedProcess);
+        validateAdministrativeProcessDocument(updatedProcess);
 
         updateProcessFields(existingProcess, updatedProcess);
 
