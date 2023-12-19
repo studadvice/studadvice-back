@@ -30,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/administrative-process")
+@CrossOrigin(origins = "http://studadvice.com")
 public class AdministrativeProcessController {
     @Autowired
     private ModelMapper modelMapper;

@@ -103,6 +103,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-common-env
+        with:
+          firebase-config-base64: ${{ secrets.FIREBASE_CONFIG_BASE64 }}
 
       - name: Build Image Docker
         run: |
