@@ -152,29 +152,64 @@ public class AdministrativeProcessService {
     }
 
 
-    public Page<CategoryDto> searchAdministrativeProcess(String searchText, Pageable pageable) {
-        TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
-
-        Query query = TextQuery.queryText(criteria).sortByScore();
-        query.with(pageable);
-
-        long total = mongoTemplate.count(query, AdministrativeProcess.class);
-
-        List<AdministrativeProcess> processes = mongoTemplate.find(query, AdministrativeProcess.class);
-
-        List<CategoryDto> dtos = new ArrayList<>();
-
-        for (AdministrativeProcess administrativeProcess : processes) {
-            Query categoryQuery = new Query(Criteria.where("administrativeProcesses").is(administrativeProcess.getId()));
-            Optional<Category> category = Optional.ofNullable(mongoTemplate.findOne(categoryQuery, Category.class));
-
-            category.ifPresent(cat -> {
-                CategoryDto dto = modelMapper.map(cat, CategoryDto.class);
-                dtos.add(dto);
-            });
+    public Page<AdministrativeProcessDto> searchAdministrativeProcess(ObjectId categoryId, String searchText, Pageable pageable) {
+        if (categoryId != null) {
+            return searchByCategoryId(categoryId, searchText, pageable);
+        } else {
+            return searchWithoutCategoryId(searchText, pageable);
         }
+    }
 
-        return PageableExecutionUtils.getPage(dtos, pageable, () -> total);
+    private Page<AdministrativeProcessDto> searchWithoutCategoryId(String searchText, Pageable pageable) {
+        if (!Objects.equals(searchText, "")) {
+            TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
+
+            Query query = TextQuery.queryText(criteria).sortByScore();
+            query.with(pageable);
+
+            long total = mongoTemplate.count(query, AdministrativeProcess.class);
+
+            List<AdministrativeProcess> processes = mongoTemplate.find(query, AdministrativeProcess.class);
+
+            List<AdministrativeProcessDto> dtos = new ArrayList<>();
+
+            for (AdministrativeProcess administrativeProcess : processes) {
+                AdministrativeProcessDto dto = modelMapper.map(administrativeProcess, AdministrativeProcessDto.class);
+                dtos.add(dto);
+            }
+
+            return PageableExecutionUtils.getPage(dtos, pageable, () -> total);
+        }
+        else {
+           return getAdministrativeProcesses(null,null,null,null,pageable);
+        }
+    }
+
+    private Page<AdministrativeProcessDto> searchByCategoryId(ObjectId categoryId, String searchText, Pageable pageable) {
+        if(!Objects.equals(searchText, "")) {
+            TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
+
+            Query query = TextQuery.queryText(criteria).sortByScore();
+            query.with(pageable);
+
+            query.addCriteria(Criteria.where("categoryId").is(categoryId));
+
+            long total = mongoTemplate.count(query, AdministrativeProcess.class);
+
+            List<AdministrativeProcess> processes = mongoTemplate.find(query, AdministrativeProcess.class);
+
+            List<AdministrativeProcessDto> dtos = new ArrayList<>();
+
+            for (AdministrativeProcess administrativeProcess : processes) {
+                AdministrativeProcessDto dto = modelMapper.map(administrativeProcess, AdministrativeProcessDto.class);
+                dtos.add(dto);
+            }
+
+            return PageableExecutionUtils.getPage(dtos, pageable, () -> total);
+        }
+        else{
+            return getAdministrativeProcesses(null,null,null,null,pageable);
+        }
     }
 
 

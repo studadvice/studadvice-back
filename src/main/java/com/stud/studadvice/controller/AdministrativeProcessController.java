@@ -124,10 +124,10 @@ public class AdministrativeProcessController {
             @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
     })
     @GetMapping("/search")
-    public Page<CategoryDto> searchAdministrativeProcess(@RequestParam String searchText,
+    public Page<AdministrativeProcessDto> searchAdministrativeProcess(@RequestParam(required = false) ObjectId categoryId,@RequestParam(required = false) String searchText,
                                                          @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page, @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
         Pageable pageable = PageRequest.of(page, size);
-        return administrativeProcessService.searchAdministrativeProcess(searchText,pageable);
+        return administrativeProcessService.searchAdministrativeProcess(categoryId,searchText,pageable);
     }
 
 }

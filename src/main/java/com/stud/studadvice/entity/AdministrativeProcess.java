@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
 
@@ -33,7 +34,8 @@ public class AdministrativeProcess {
     private List<String> nationalities;
     private List<String> universities;
     private List<Step> steps;
-
+    @DocumentReference(lookup = "{ 'id' : ?#{#target} }")
+    private Category category;
     public AdministrativeProcess() {
     }
 }

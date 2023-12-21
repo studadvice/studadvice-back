@@ -5,7 +5,6 @@ import com.stud.studadvice.dto.CategoryDto;
 import com.stud.studadvice.exception.AdministrativeProcessException;
 import com.stud.studadvice.exception.CategoryException;
 import com.stud.studadvice.exception.ImageException;
-import com.stud.studadvice.entity.AdministrativeProcess;
 import com.stud.studadvice.entity.Category;
 import com.stud.studadvice.service.CategoryService;
 
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import jakarta.validation.Valid;
+
 import org.bson.types.ObjectId;
 
 import org.modelmapper.ModelMapper;
@@ -26,8 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -144,6 +142,18 @@ public class CategoryController {
         catch (CategoryException | AdministrativeProcessException categoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryException.getMessage(), categoryException);
         }
+    }
+
+
+    @Operation(summary = "Search for a category by administrative processes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Administrative processes retrieved successfully"),
+    })
+    @GetMapping("/search")
+    public Page<CategoryDto> searchAdministrativeProcess(@RequestParam(required = false) String searchText,
+                                                         @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page, @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return categoryService.searchAdministrativeProcess(searchText,pageable);
     }
 
 }
