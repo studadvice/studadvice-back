@@ -20,6 +20,9 @@ public class DealDto {
     private String imageId;
     private String startDate;
     private String endDate;
+    private Integer rating = 0;
+    @NotNull(message = "Please, give an url for your deal")
+    private String url;
 
     public DealDto() {
     }

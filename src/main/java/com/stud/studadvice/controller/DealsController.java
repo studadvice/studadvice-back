@@ -1,7 +1,6 @@
 package com.stud.studadvice.controller;
 
 import com.stud.studadvice.dto.DealDto;
-import com.stud.studadvice.entity.AdministrativeProcess;
 import com.stud.studadvice.exception.DealException;
 import com.stud.studadvice.exception.ImageException;
 import com.stud.studadvice.entity.Deal;
@@ -115,11 +114,24 @@ public class DealsController {
             @ApiResponse(responseCode = "200", description = "Deals retrieved successfully"),
     })
     @GetMapping("/search")
-    public Page<DealDto> searchDeals(@RequestParam String searchText,
+    public Page<DealDto> searchDeals(@RequestParam(required = false) String searchText,
                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
                                   @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
 
         Pageable pageable = PageRequest.of(page, size);
         return dealsService.searchDeals(searchText,pageable);
+    }
+
+    @Operation(summary = "Get recommended deals")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deals retrieved successfully"),
+    })
+    @GetMapping("/recommendations")
+    public Page<DealDto> getRecommendedDeals(
+                                     @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
+                                     @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+        return dealsService.getRecommendedDeals(pageable);
     }
 }

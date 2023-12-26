@@ -14,6 +14,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 @Getter
 @Setter
 @Document
@@ -33,6 +34,9 @@ public class Deal {
     private String imageId;
     private String startDate;
     private String endDate;
+    private Integer rating;
+    @NotNull(message = "Please, give an url for your deal")
+    private String url;
 
     public Deal() {
     }

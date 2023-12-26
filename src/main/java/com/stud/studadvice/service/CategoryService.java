@@ -202,7 +202,7 @@ public class CategoryService {
     }
 
     public Page<CategoryDto> searchAdministrativeProcess(String searchText, Pageable pageable) {
-        if (!Objects.equals(searchText, "")) {
+        if (searchText != null && !searchText.isEmpty()) {
             TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
 
             Query query = TextQuery.queryText(criteria).sortByScore();

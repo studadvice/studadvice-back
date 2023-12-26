@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
@@ -28,9 +29,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Sort;
 
 @Service
 public class DealsService {
@@ -47,13 +52,24 @@ public class DealsService {
     private ModelMapper modelMapper;
 
     public Page<DealDto> getDeals(Pageable pageable) {
-        Page<Deal> dealPage = dealsRepository.findAll(pageable);
-        List<DealDto> dealDtos = dealPage.getContent().stream()
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = currentDate.format(formatter);
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("endDate").gt(formattedDate));
+        query.with(pageable);
+        query.with(Sort.by(Sort.Order.desc("startDate")));
+
+        List<Deal> deals = mongoTemplate.find(query, Deal.class);
+
+        List<DealDto> dealDtos = deals.stream()
                 .map(deal -> modelMapper.map(deal, DealDto.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(dealDtos, pageable, dealPage.getTotalElements());
+        return new PageImpl<>(dealDtos, pageable, deals.size());
     }
+
 
     public DealDto createDeal(Deal deal, MultipartFile imageFile) throws ImageException {
         try {
@@ -111,23 +127,28 @@ public class DealsService {
     }
 
     public Page<DealDto> searchDeals(String searchText, Pageable pageable) {
-        TextCriteria criteria = TextCriteria.forDefaultLanguage()
-                .matching(searchText);
+        if (searchText != null && !searchText.isEmpty()) {
+            TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(searchText);
 
-        Query query = TextQuery.queryText(criteria)
-                .sortByScore();
+            Query query = TextQuery.queryText(criteria).sortByScore();
 
-        query.with(pageable);
+            query.addCriteria(Criteria.where("endDate").gte(LocalDate.now().toString()));
 
-        long total = mongoTemplate.count(query, Deal.class);
+            query.with(pageable);
 
-        List<Deal> deals = mongoTemplate.find(query, Deal.class);
-        List<DealDto> dealDtos = deals.stream()
-                .map(deal -> modelMapper.map(deal, DealDto.class))
-                .collect(Collectors.toList());
+            long total = mongoTemplate.count(query, Deal.class);
 
-        return PageableExecutionUtils.getPage(dealDtos, pageable, () -> total);
+            List<Deal> deals = mongoTemplate.find(query, Deal.class);
+            List<DealDto> dealDtos = deals.stream()
+                    .map(deal -> modelMapper.map(deal, DealDto.class))
+                    .collect(Collectors.toList());
+
+            return PageableExecutionUtils.getPage(dealDtos, pageable, () -> total);
+        } else {
+            return getDeals(pageable);
+        }
     }
+
 
     public String storeImage(MultipartFile imageFile) throws IOException {
         GridFSUploadOptions options = new GridFSUploadOptions()
@@ -135,4 +156,24 @@ public class DealsService {
                         .append("contentSize", imageFile.getSize()));
         return gridFsTemplate.store(imageFile.getInputStream(), Objects.requireNonNull(imageFile.getOriginalFilename()), options).toString();
     }
+
+    public Page<DealDto> getRecommendedDeals(Pageable pageable) {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = currentDate.format(formatter);
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("endDate").gt(formattedDate));
+        query.with(pageable);
+        query.with(Sort.by(Sort.Order.desc("rating")));
+
+        List<Deal> recommendedDeals = mongoTemplate.find(query, Deal.class);
+
+        List<DealDto> dealDtos = recommendedDeals.stream()
+                .map(deal -> modelMapper.map(deal, DealDto.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dealDtos, pageable, recommendedDeals.size());
+    }
+
 }
