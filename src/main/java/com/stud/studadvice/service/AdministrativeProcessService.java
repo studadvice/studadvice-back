@@ -131,7 +131,7 @@ public class AdministrativeProcessService {
         }
 
         if (education != null) {
-            criteria.and("education").is(education);
+            criteria.and("educations").in(education);
         }
 
         Query query = new Query(criteria);
@@ -150,7 +150,8 @@ public class AdministrativeProcessService {
     }
 
 
-    public Page<AdministrativeProcessDto> searchAdministrativeProcess(ObjectId categoryId, String searchText, Pageable pageable) {
+
+    public Page<AdministrativeProcessDto> searchAdministrativeProcess(String categoryId, String searchText, Pageable pageable) {
         if (categoryId != null) {
             return searchByCategoryId(categoryId, searchText, pageable);
         } else {
@@ -183,7 +184,7 @@ public class AdministrativeProcessService {
     }
 
 
-    private Page<AdministrativeProcessDto> searchByCategoryId(ObjectId categoryId, String searchText, Pageable pageable) {
+    private Page<AdministrativeProcessDto> searchByCategoryId(String categoryId, String searchText, Pageable pageable) {
         Query query = new Query().addCriteria(Criteria.where("category").is(categoryId));
 
         if (searchText != null && !searchText.isEmpty()) {

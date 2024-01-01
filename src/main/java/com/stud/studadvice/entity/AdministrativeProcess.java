@@ -34,8 +34,9 @@ public class AdministrativeProcess {
     private List<String> nationalities;
     private List<String> universities;
     private List<Step> steps;
-    @DocumentReference(lookup = "{ 'id' : ?#{#target} }")
-    private Category category;
+    private String category;
+    private String startDate;
+    private String endDate;
     public AdministrativeProcess() {
     }
 }
