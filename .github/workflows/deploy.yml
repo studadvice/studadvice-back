@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           debug: true
           script: |
-            echo ${{ secrets.PERSONAL_ACCESS_TOKEN }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+            echo ${{ secrets.STUDADVICE_BACK_TOKEN }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
             sudo docker pull ghcr.io/${{ github.repository_owner }}/studadvice:latest
             sudo docker stack deploy --compose-file docker-compose.yml studadvice
             sudo docker service update --image ghcr.io/studadvice/studadvice --force studadvice_studadvice-back
