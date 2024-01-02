@@ -77,7 +77,7 @@ public class CategoryService {
 
             for (AdministrativeProcess administrativeProcess : category.getAdministrativeProcesses()) {
                 AdministrativeProcess process = administrativeProcessRepository.findById(administrativeProcess.getId()).get();
-                process.setCategory(category);
+                process.setCategory(String.valueOf(category.getId()));
                 administrativeProcessRepository.save(process);
             }
 
@@ -116,7 +116,7 @@ public class CategoryService {
 
             for (AdministrativeProcess administrativeProcess : updatedCategory.getAdministrativeProcesses()) {
                 AdministrativeProcess process = administrativeProcessRepository.findById(administrativeProcess.getId()).get();
-                process.setCategory(updatedCategory);
+                process.setCategory(String.valueOf(updatedCategory.getId()));
                 administrativeProcessRepository.save(process);
             }
 

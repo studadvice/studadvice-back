@@ -26,7 +26,9 @@ public class AdministrativeProcessDto {
     private List<String> nationalities;
     private List<String> universities;
     private List<StepDto> steps;
-    private Category category;
+    private String category;
+    private String startDate;
+    private String endDate;
 
     public AdministrativeProcessDto() {
     }
