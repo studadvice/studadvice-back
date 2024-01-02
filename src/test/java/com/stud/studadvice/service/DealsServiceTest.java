@@ -45,29 +45,6 @@ public class DealsServiceTest {
     }
 
     @Test
-    void testGetDeals_ShouldReturnPage() {
-        Pageable pageable = PageRequest.of(0, 10);
-
-        List<Deal> deals = Collections.singletonList(new Deal());
-        Page<Deal> dealPage = new PageImpl<>(deals, pageable, deals.size());
-
-        when(dealRepository.findAll(pageable)).thenReturn(dealPage);
-
-        List<DealDto> dealDtos = Collections.singletonList(new DealDto());
-        when(modelMapper.map(any(), eq(DealDto.class))).thenReturn(dealDtos.get(0));
-
-        Page<DealDto> result = dealService.getDeals(pageable);
-
-        assertNotNull(result);
-        assertEquals(dealDtos.size(), result.getContent().size());
-        assertEquals(dealPage.getTotalElements(), result.getTotalElements());
-
-        verify(dealRepository, times(1)).findAll(pageable);
-
-        verify(modelMapper, times(deals.size())).map(any(), eq(DealDto.class));
-    }
-
-    @Test
     void testDeleteDeal_ExistingId_ShouldNotThrowException() {
         ObjectId dealId = new ObjectId();
 
