@@ -2,6 +2,7 @@
 logging:
   level:
     org.springframework.data.mongodb: DEBUG
+    org.mongodb.driver: DEBUG
 
 spring:
   data:
