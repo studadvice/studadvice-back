@@ -15,7 +15,6 @@ import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -62,6 +61,7 @@ public class DealsService {
                 Criteria.where("endDate").is(null)
         ));
 
+        long total = mongoTemplate.count(query, Deal.class);
         query.with(pageable);
         query.with(Sort.by(Sort.Order.desc("startDate")));
 
@@ -71,7 +71,7 @@ public class DealsService {
                 .map(deal -> modelMapper.map(deal, DealDto.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(dealDtos, pageable, deals.size());
+        return PageableExecutionUtils.getPage(dealDtos, pageable, () -> total);
     }
 
 
@@ -174,6 +174,8 @@ public class DealsService {
                 Criteria.where("endDate").gt(formattedDate),
                 Criteria.where("endDate").is(null)
         ));
+
+        long total = mongoTemplate.count(query, Deal.class);
         query.with(pageable);
         query.with(Sort.by(Sort.Order.desc("rating")));
 
@@ -183,7 +185,7 @@ public class DealsService {
                 .map(deal -> modelMapper.map(deal, DealDto.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(dealDtos, pageable, recommendedDeals.size());
+        return PageableExecutionUtils.getPage(dealDtos, pageable, () -> total);
     }
 
 }
