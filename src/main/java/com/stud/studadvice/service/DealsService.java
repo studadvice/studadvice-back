@@ -170,7 +170,10 @@ public class DealsService {
         String formattedDate = currentDate.format(formatter);
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("endDate").gt(formattedDate));
+        query.addCriteria(new Criteria().orOperator(
+                Criteria.where("endDate").gt(formattedDate),
+                Criteria.where("endDate").is(null)
+        ));
         query.with(pageable);
         query.with(Sort.by(Sort.Order.desc("rating")));
 
