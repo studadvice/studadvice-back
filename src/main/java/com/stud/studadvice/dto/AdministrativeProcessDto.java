@@ -29,6 +29,7 @@ public class AdministrativeProcessDto {
     private String category;
     private String startDate;
     private String endDate;
+    private String type;
 
     public AdministrativeProcessDto() {
     }
