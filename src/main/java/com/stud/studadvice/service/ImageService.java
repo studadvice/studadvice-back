@@ -4,6 +4,7 @@ import com.mongodb.client.gridfs.model.GridFSFile;
 
 
 import com.stud.studadvice.dto.FileDto;
+import com.stud.studadvice.exception.ImageException;
 import org.apache.commons.io.IOUtils;
 
 import org.bson.Document;
@@ -13,11 +14,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @Service
-public class FileService {
+public class ImageService {
     @Autowired
     private GridFsOperations operations;
 
@@ -48,6 +50,13 @@ public class FileService {
         }
 
         return loadFile;
+    }
+
+    public String upload(MultipartFile image) throws IOException {
+        if (image.isEmpty()) {
+            throw new IllegalArgumentException("Image is empty");
+        }
+        return template.store(image.getInputStream(), image.getOriginalFilename(), image.getContentType()).toString();
     }
 
     public boolean checkFile(FileDto file){
