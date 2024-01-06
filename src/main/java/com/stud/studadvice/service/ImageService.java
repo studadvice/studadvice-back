@@ -3,8 +3,8 @@ package com.stud.studadvice.service;
 import com.mongodb.client.gridfs.model.GridFSFile;
 
 
+import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.stud.studadvice.dto.FileDto;
-import com.stud.studadvice.exception.ImageException;
 import org.apache.commons.io.IOUtils;
 
 import org.bson.Document;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 public class ImageService {
@@ -56,8 +57,10 @@ public class ImageService {
         if (image.isEmpty()) {
             throw new IllegalArgumentException("Image is empty");
         }
-        return template.store(image.getInputStream(), image.getOriginalFilename(), image.getContentType()).toString();
-    }
+        GridFSUploadOptions options = new GridFSUploadOptions()
+                .metadata(new Document("contentType", image.getContentType())
+                        .append("contentSize", image.getSize()));
+        return template.store(image.getInputStream(), Objects.requireNonNull(image.getOriginalFilename()),options).toString();    }
 
     public boolean checkFile(FileDto file){
         return file.getFile()!=null && file.getFileType() != null && file.getFilename() != null;

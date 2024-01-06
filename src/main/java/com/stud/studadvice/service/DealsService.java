@@ -57,7 +57,11 @@ public class DealsService {
         String formattedDate = currentDate.format(formatter);
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("endDate").gt(formattedDate));
+        query.addCriteria(new Criteria().orOperator(
+                Criteria.where("endDate").gt(formattedDate),
+                Criteria.where("endDate").is(null)
+        ));
+
         query.with(pageable);
         query.with(Sort.by(Sort.Order.desc("startDate")));
 
@@ -132,7 +136,10 @@ public class DealsService {
 
             Query query = TextQuery.queryText(criteria).sortByScore();
 
-            query.addCriteria(Criteria.where("endDate").gte(LocalDate.now().toString()));
+            query.addCriteria(new Criteria().orOperator(
+                    Criteria.where("endDate").gt(LocalDate.now().toString()),
+                    Criteria.where("endDate").is(null)
+            ));
 
             query.with(pageable);
 
