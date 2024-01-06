@@ -16,6 +16,8 @@ import org.bson.types.ObjectId;
 
 import org.modelmapper.ModelMapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +37,7 @@ public class AdministrativeProcessController {
     private ModelMapper modelMapper;
     @Autowired
     private AdministrativeProcessService administrativeProcessService;
+    Logger logger = LoggerFactory.getLogger(AdministrativeProcessController.class);
 
     @Operation(summary = "Retrieve an administrative process by ID")
     @ApiResponses(value = {
@@ -114,6 +117,8 @@ public class AdministrativeProcessController {
             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page,
             @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size) {
 
+        logger.info("GET request received for retrieving administrative processes with parameters - age: " + age + ", nationality: " + nationality +
+                ", university: " + university + ", education: " + education + ", page: " + page + ", size: " + size);
         Pageable pageable = PageRequest.of(page, size);
         return administrativeProcessService.getAdministrativeProcesses(age, nationality, university,education,pageable);
     }
@@ -125,6 +130,8 @@ public class AdministrativeProcessController {
     @GetMapping("/search")
     public Page<AdministrativeProcessDto> searchAdministrativeProcess(@RequestParam(required = false) String categoryId,@RequestParam(required = false) String searchText,
                                                          @RequestParam(defaultValue = "${spring.data.web.pageable.default-page}") int page, @RequestParam(defaultValue = "${spring.data.web.pageable.default-page-size}") int size){
+        logger.info("GET request received for searching administrative processes with parameters - categoryId: " + categoryId +
+                ", searchText: " + searchText + ", page: " + page + ", size: " + size);
         Pageable pageable = PageRequest.of(page, size);
         return administrativeProcessService.searchAdministrativeProcess(categoryId,searchText,pageable);
     }
