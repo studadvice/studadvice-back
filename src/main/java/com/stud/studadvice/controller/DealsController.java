@@ -134,4 +134,18 @@ public class DealsController {
         Pageable pageable = PageRequest.of(page, size);
         return dealsService.getRecommendedDeals(pageable);
     }
+
+    @Operation(summary = "Rate a student deal by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Student deal rated successfully"),
+            @ApiResponse(responseCode = "404", description = "Student deal not found"),
+    })
+    @PostMapping("/{dealId}/rate")
+    public DealDto rateDeal(@PathVariable ObjectId dealId, @RequestParam Integer rating) {
+        try {
+            return dealsService.rateDeal(dealId, rating);
+        } catch (DealException dealException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dealException.getMessage(), dealException);
+        }
+    }
 }

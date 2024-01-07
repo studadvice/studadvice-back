@@ -37,6 +37,7 @@ public class Deal {
     private Integer rating;
     @NotNull(message = "Please, give an url for your deal")
     private String url;
+    private Integer numberOfRating = 0;
 
     public Deal() {
     }

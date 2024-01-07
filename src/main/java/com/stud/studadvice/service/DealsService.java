@@ -188,4 +188,21 @@ public class DealsService {
         return PageableExecutionUtils.getPage(dealDtos, pageable, () -> total);
     }
 
+    public DealDto rateDeal(ObjectId dealId, Integer rating) throws DealException {
+        Deal dealToUpdate = dealsRepository.findById(dealId)
+                .orElseThrow(() -> new DealException("Student deal not found"));
+
+        int totalRating = dealToUpdate.getRating() * dealToUpdate.getNumberOfRating() + rating;
+        int newNumberOfRating = dealToUpdate.getNumberOfRating() + 1;
+
+        int newAverageRating = totalRating / newNumberOfRating;
+
+        dealToUpdate.setRating(newAverageRating);
+        dealToUpdate.setNumberOfRating(newNumberOfRating);
+
+        Deal updatedDealEntity = dealsRepository.save(dealToUpdate);
+
+        return modelMapper.map(updatedDealEntity, DealDto.class);
+    }
+
 }

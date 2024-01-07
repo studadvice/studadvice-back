@@ -21,6 +21,7 @@ public class DealDto {
     private String startDate;
     private String endDate;
     private Integer rating = 0;
+    private Integer numberOfRating = 0;
     @NotNull(message = "Please, give an url for your deal")
     private String url;
 
